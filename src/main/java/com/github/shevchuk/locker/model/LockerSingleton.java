@@ -1,13 +1,21 @@
 package com.github.shevchuk.locker.model;
 
-import javax.persistence.Entity;
+import javax.persistence.*;
 import java.util.List;
 
 
 @Entity(name = "Lockers")
 public class LockerSingleton implements Locker {
+
+    @Id
+    @Column(name = "locker_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long lockerId;
-    private int lockerNumber;
+
+    @Column(name = "number")
+    private int number;
+
+    @Transient
     private List<Locker> neighbors;
 
     public long getLockerId() {
@@ -18,12 +26,12 @@ public class LockerSingleton implements Locker {
         this.lockerId = lockerId;
     }
 
-    public int getLockerNumber() {
-        return lockerNumber;
+    public int getNumber() {
+        return number;
     }
 
-    public void setLockerNumber(int lockerNumber) {
-        this.lockerNumber = lockerNumber;
+    public void setNumber(int number) {
+        this.number = number;
     }
 
     public List<Locker> getNeighbors() {

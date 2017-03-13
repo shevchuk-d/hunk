@@ -1,7 +1,11 @@
 package com.github.shevchuk.clients.client.dao;
 
-/**
- * Created by sh on 3/13/2017.
- */
+import com.github.shevchuk.clients.client.model.Client;
+
+
 public interface DAOClient {
+    void addClient(Client client);
+    void removeClient(Client client);
+    void updateClient(Client client);
+    Client getClientById(long clientId);
 }

@@ -6,11 +6,12 @@ import javax.persistence.*;
 import java.util.List;
 
 
-@Entity(name = "clients")
+@Entity
+@Table(name = "clients")
 public class SimpleClient implements Client {
     @Id
-    @Column(name = "client_id", nullable = false, updatable = false, insertable = false)
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "client_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long clientId;
 
     @Column(name = "name")
@@ -23,8 +24,9 @@ public class SimpleClient implements Client {
 //    @JoinTable(name = "",
 //            joinColumns = @JoinColumn(name = "client_id")
 //            , inverseJoinColumns = @JoinColumn(name = "visit_id"))
+    @Transient
     private List<Visit> visits;
-
+    @Transient
     private Visit averageVisit;
 
     public long getClientId() {

@@ -1,17 +1,23 @@
 package com.github.shevchuk.clients.visit.model;
 
-import com.github.shevchuk.locker.model.Locker;
+import com.github.shevchuk.locker.model.LockerSingleton;
 
-import javax.persistence.Entity;
+import javax.persistence.*;
 import java.util.Date;
 
 
-@Entity
+@Entity(name = "visits")
 public class SimpleVisit {
+    @Id
+    @Column(name = "visit_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long visitId;
     private Date start;
     private Date finish;
-    private Locker locker;
+    @Column(name = "locker_id")
+    private int lockerId;
+    @Column(name = "client_id")
+    private int clientId;
 
     public long getVisitId() {
         return visitId;
@@ -37,11 +43,20 @@ public class SimpleVisit {
         this.finish = finish;
     }
 
-    public Locker getLocker() {
-        return locker;
+
+    public int getLockerId() {
+        return lockerId;
     }
 
-    public void setLocker(Locker locker) {
-        this.locker = locker;
+    public void setLockerId(int lockerId) {
+        this.lockerId = lockerId;
+    }
+
+    public int getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(int clientId) {
+        this.clientId = clientId;
     }
 }

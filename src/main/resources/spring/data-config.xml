@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context
+            http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+    <context:property-placeholder location="classpath:application.properties"/>
+
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driverClassName}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+
+
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="annotatedClasses">
+            <list>
+                <value>com.github.shevchuk.clients.client.model.SimpleClient</value>
+                <value>com.github.shevchuk.clients.visit.model.SimpleVisit</value>
+                <value>com.github.shevchuk.locker.model.LockerSingleton</value>
+            </list>
+        </property>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQL9Dialect</prop>
+                <prop key="hibernate.current_session_context_class">thread</prop>
+                <prop key="hibernate.show_sql">true</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="personDAO" class="com.github.shevchuk.clients.client.dao.SimpleDAOClient">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+    <bean id="visitDAO" class="com.github.shevchuk.clients.visit.dao.SimpleDAOVisit">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+    <bean id="lockerDAO" class="com.github.shevchuk.locker.dao.SimpleDAOLocker">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+
+</beans>
