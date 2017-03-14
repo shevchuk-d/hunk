@@ -11,7 +11,7 @@ public class SimpleDAOLocker implements DAOLocker {
 
     @Override
     public void addLocker(Locker locker) {
-        sessionFactory.getCurrentSession().save(locker);
+        daoUtils.add(sessionFactory, locker);
     }
 
     @Override
@@ -35,5 +35,9 @@ public class SimpleDAOLocker implements DAOLocker {
 
     public void setDaoUtils(DAOUtils daoUtils) {
         this.daoUtils = daoUtils;
+    }
+
+    public DAOUtils getDaoUtils() {
+        return daoUtils;
     }
 }

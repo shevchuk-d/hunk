@@ -27,11 +27,11 @@ public class SimpleDAOClient implements DAOClient {
     }
 
     @Override
-    public void updateClient(long clientId, Client update) {
+    public void updateClient(long clientId, Client updater) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         Client clientPersistent = session.load(SimpleClient.class, clientId);
-        clientPersistent.update(update);
+        clientPersistent.update(updater);
         session.update(clientPersistent);
         transaction.commit();
         session.close();

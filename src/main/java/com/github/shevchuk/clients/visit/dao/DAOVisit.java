@@ -7,7 +7,9 @@ import com.github.shevchuk.clients.visit.model.Visit;
  */
 public interface DAOVisit {
     void addVisit(Visit visit);
-    void removeVisit(Visit visit);
-    void updateVisit(Visit visit);
+    void deleteVisit(long visitId);
+
+    void updateVisit(long visitId, Visit updater);
+
     Visit getVisitById(long visitId);
 }

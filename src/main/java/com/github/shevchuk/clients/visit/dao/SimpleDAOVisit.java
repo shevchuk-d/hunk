@@ -1,7 +1,9 @@
 package com.github.shevchuk.clients.visit.dao;
 
+import com.github.shevchuk.clients.visit.model.SimpleVisit;
 import com.github.shevchuk.clients.visit.model.Visit;
 import com.github.shevchuk.utils.DAOUtils;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -16,19 +18,24 @@ public class SimpleDAOVisit implements DAOVisit{
         daoUtils.add(sessionFactory, visit);
     }
 
-    @Override
-    public void removeVisit(Visit visit) {
-        sessionFactory.getCurrentSession().delete(visit);
+    public void deleteVisit(long visitId) {
+        daoUtils.delete(sessionFactory, visitId, SimpleVisit.class);
     }
 
     @Override
-    public void updateVisit(Visit visit) {
-        sessionFactory.getCurrentSession().update(visit);
+    public void updateVisit(long visitId, Visit updater) {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        Visit clientPersistent = session.load(SimpleVisit.class, visitId);
+        clientPersistent.update(updater);
+        session.update(clientPersistent);
+        transaction.commit();
+        session.close();
     }
 
     @Override
     public Visit getVisitById(long visitId) {
-        return (Visit) sessionFactory.getCurrentSession().load(Visit.class, visitId);
+        return (SimpleVisit) daoUtils.getById(sessionFactory, visitId, SimpleVisit.class);
     }
 
     public void setSessionFactory(SessionFactory sessionFactory) {
