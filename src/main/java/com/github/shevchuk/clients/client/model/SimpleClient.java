@@ -68,4 +68,9 @@ public class SimpleClient implements Client {
     public void setAverageVisit(Visit averageVisit) {
         this.averageVisit = averageVisit;
     }
+
+    public void update(Client client){
+        this.name = client.getName();
+        this.sex = client.getSex();
+    }
 }

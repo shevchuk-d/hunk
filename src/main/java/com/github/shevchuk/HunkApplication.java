@@ -31,9 +31,14 @@ public class HunkApplication {
 		client.setName("Pankaj");
 		client.setSex("bi");
 
-		daoClient.addClient(client);
+		Client client2 = new SimpleClient();
+		client2.setName("vazgen");
+		client2.setSex("gay");
 
-		System.out.println("Person:: "+daoClient.getClientById(1).getName());
+		daoClient.addClient(client);
+		daoClient.updateClient(7, client2);
+		System.out.println("Updated client: " + daoClient.getClientById(7).getName());
+		daoClient.deleteClient(3);
 
 //		List<Person> list = daoClient.list();
 //

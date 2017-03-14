@@ -21,4 +21,6 @@ public interface Client {
 
     Visit getAverageVisit();
     void setAverageVisit(Visit averageVisit);
+
+    void update(Client client);
 }

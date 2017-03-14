@@ -1,16 +1,19 @@
 package com.github.shevchuk.clients.visit.dao;
 
 import com.github.shevchuk.clients.visit.model.Visit;
+import com.github.shevchuk.utils.DAOUtils;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 
 
 public class SimpleDAOVisit implements DAOVisit{
     private SessionFactory sessionFactory;
-
+    private DAOUtils daoUtils;
 
     @Override
     public void addVisit(Visit visit) {
-        sessionFactory.getCurrentSession().save(visit);
+        daoUtils.add(sessionFactory, visit);
     }
 
     @Override
@@ -30,5 +33,9 @@ public class SimpleDAOVisit implements DAOVisit{
 
     public void setSessionFactory(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
+    }
+
+    public void setDaoUtils(DAOUtils daoUtils) {
+        this.daoUtils = daoUtils;
     }
 }

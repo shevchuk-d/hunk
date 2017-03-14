@@ -1,11 +1,13 @@
 package com.github.shevchuk.locker.dao;
 
 import com.github.shevchuk.locker.model.Locker;
+import com.github.shevchuk.utils.DAOUtils;
 import org.hibernate.SessionFactory;
 
 
 public class SimpleDAOLocker implements DAOLocker {
     private SessionFactory sessionFactory;
+    private DAOUtils daoUtils;
 
     @Override
     public void addLocker(Locker locker) {
@@ -29,5 +31,9 @@ public class SimpleDAOLocker implements DAOLocker {
 
     public void setSessionFactory(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
+    }
+
+    public void setDaoUtils(DAOUtils daoUtils) {
+        this.daoUtils = daoUtils;
     }
 }

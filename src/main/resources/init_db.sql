@@ -1,37 +1,37 @@
-CREATE DATABASE hunk;
+create database hunk;
 
-drop TABLE IF EXISTS lockers_neighbors;
-drop TABLE IF EXISTS lockers;
-drop TABLE IF EXISTS visits;
-drop TABLE IF EXISTS clients;
+drop table if exists lockers_neighbors;
+drop table if exists visits;
+drop table if exists lockers;
+drop table if exists clients;
 
-CREATE TABLE clients (
+create table clients (
   client_id bigserial,
-	NAME VARCHAR(255),
-  sex VARCHAR(7),
+	name varchar(255),
+  sex varchar(7),
   primary key (client_id)
 ) ;
 
-CREATE TABLE lockers (
+create table lockers (
   locker_id bigserial,
-	number INT,
+	number int,
   primary key (locker_id)
 ) ;
 
-CREATE TABLE visits (
+create table visits (
 	visit_id bigserial,
-	start DATE,
-	finish DATE,
-	locker_id BIGINT,
-  client_id BIGINT,
+	start date,
+	finish date,
+	locker_id bigint,
+  client_id bigint,
   primary key (visit_id),
 	foreign key (locker_id) references lockers(locker_id),
 	foreign key (client_id) references clients(client_id)
 ) ;
 
-CREATE TABLE lockers_neighbors (
-  locker_id BIGINT,
-  neighbor_id BIGINT,
-  FOREIGN KEY (locker_id) REFERENCES lockers(locker_id),
-  FOREIGN KEY (neighbor_id) REFERENCES lockers(locker_id)
+create table lockers_neighbors (
+  locker_id bigint,
+  neighbor_id bigint,
+  foreign key (locker_id) references lockers(locker_id),
+  foreign key (neighbor_id) references lockers(locker_id)
 ) ;
