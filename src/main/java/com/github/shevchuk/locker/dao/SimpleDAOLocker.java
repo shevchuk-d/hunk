@@ -26,7 +26,7 @@ public class SimpleDAOLocker implements DAOLocker {
 
     @Override
     public Locker getLockerById(long lockerId) {
-        return (Locker) sessionFactory.getCurrentSession().load(Locker.class, lockerId);
+        return sessionFactory.getCurrentSession().load(Locker.class, lockerId);
     }
 
     public void setSessionFactory(SessionFactory sessionFactory) {

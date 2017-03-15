@@ -1,7 +1,14 @@
 package com.github.shevchuk;
 
+import com.github.shevchuk.clients.client.dao.DAOClient;
+import com.github.shevchuk.clients.client.dao.SimpleDAOClient;
+import com.github.shevchuk.clients.client.model.Client;
+import com.github.shevchuk.clients.visit.dao.DAOVisit;
+import com.github.shevchuk.clients.visit.dao.SimpleDAOVisit;
+import com.github.shevchuk.clients.visit.model.Visit;
+import com.github.shevchuk.locker.dao.DAOLocker;
 import com.github.shevchuk.locker.dao.SimpleDAOLocker;
-import com.github.shevchuk.locker.model.LockerSingleton;
+import com.github.shevchuk.locker.model.Locker;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
@@ -14,49 +21,48 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.IntStream;
 
 @SpringBootApplication(exclude = {JndiConnectionFactoryAutoConfiguration.class,DataSourceAutoConfiguration.class,
         HibernateJpaAutoConfiguration.class,JpaRepositoriesAutoConfiguration.class,DataSourceTransactionManagerAutoConfiguration.class})
 @ComponentScan
 public class HunkApplication {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 		SpringApplication.run(HunkApplication.class, args);
 		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("spring/root-config.xml");
 
-		SimpleDAOLocker daoLocker = context.getBean(SimpleDAOLocker.class);
+		DAOClient daoClient = context.getBean(SimpleDAOClient.class);
+		DAOLocker daoLocker = context.getBean(SimpleDAOLocker.class);
+		DAOVisit daoVisit = context.getBean(SimpleDAOVisit.class);
 
-//		Client client = new SimpleClient();
-//		client.setName("Pankaj");
-//		client.setSex("bi");
-//
-//		Client client2 = new SimpleClient();
-//		client2.setName("vazgen" + (long) (Math.random() * 100));
-//		client2.setSex("gay");
-//
-//		IntStream.range( 0, 200 ).forEach(i ->{
-//			client.setName("vazgen_" + i);
-//			daoClient.addClient(client);
-//		} );
+		Client client = new Client();
+		client.setName("Pankaj");
+		client.setSex("bi");
+
+		IntStream.range( 0, 200 ).forEach(i ->{
+			client.setName("vazgen_" + i);
+			daoClient.addClient(client);
+		} );
 //
 //		daoClient.updateClient((long) (Math.random() * 200), client2);
 //		System.out.println("Updated client: " + daoClient.getClientById(7).getName());
 //		daoClient.deleteClient((long) (Math.random() * 200) );
 
-		List<LockerSingleton> lockers = new ArrayList<>();
-//		LockerSingleton lockersA = new ArrayList<>(Arrays.asList(new Long[]{1L,5L,8L,6L,47L}));
+		List<Locker> lockers = new ArrayList<>();
 
-		LockerSingleton locker0 = new LockerSingleton();
+		Locker locker0 = new Locker();
 		locker0.setNumber(0);
 
-		LockerSingleton locker1 = new LockerSingleton();
+		Locker locker1 = new Locker();
 		locker1.setNumber(1);
-		LockerSingleton locker2 = new LockerSingleton();
+		Locker locker2 = new Locker();
 		locker2.setNumber(2);
-		LockerSingleton locker3 = new LockerSingleton();
+		Locker locker3 = new Locker();
 		locker3.setNumber(3);
-
+//
 		lockers.add(locker1);
 		lockers.add(locker2);
 		lockers.add(locker3);
@@ -64,6 +70,21 @@ public class HunkApplication {
 		locker0.setNeighbors(lockers);
 
 		daoLocker.addLocker(locker0);
+
+		Visit visit = new Visit();
+		visit.setStart(new Date());
+//		visit.setClientId(5);
+		visit.setLockerId(4);
+		visit.setClient(daoClient.getClientById(10));
+//		Thread.sleep(10000L);
+//		visit.setFinish(new Date());
+
+//		SELECT *
+//				FROM visits
+//		WHERE start NOTNULL
+//		AND finish ISNULL;
+
+		daoVisit.addVisit(visit);
 
 		context.close();
 	}

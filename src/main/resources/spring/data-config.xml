@@ -21,9 +21,9 @@
         <property name="dataSource" ref="dataSource"/>
         <property name="annotatedClasses">
             <list>
-                <value>com.github.shevchuk.clients.client.model.SimpleClient</value>
-                <value>com.github.shevchuk.clients.visit.model.SimpleVisit</value>
-                <value>com.github.shevchuk.locker.model.LockerSingleton</value>
+                <value>com.github.shevchuk.clients.client.model.Client</value>
+                <value>com.github.shevchuk.clients.visit.model.Visit</value>
+                <value>com.github.shevchuk.locker.model.Locker</value>
             </list>
         </property>
         <property name="hibernateProperties">

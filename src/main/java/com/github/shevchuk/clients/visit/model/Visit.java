@@ -1,28 +1,98 @@
 package com.github.shevchuk.clients.visit.model;
 
+import com.github.shevchuk.clients.client.model.Client;
+import com.github.shevchuk.locker.model.Locker;
+import com.sun.deploy.util.SessionState;
 
+import javax.persistence.*;
 import java.util.Date;
 
-public interface Visit {
-    long getVisitId();
 
-    void setVisitId(long visitId);
+@Entity(name = "visits")
+public class Visit {
+    @Id
+    @Column(name = "visit_id", nullable = false, updatable = false, insertable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long visitId;
+    @Column(name = "start")
+    private Date start;
+    @Column(name = "finish")
+    private Date finish;
+    @Column(name = "locker_id")
+    private int lockerId;
+//    @Column(name = "client_id", nullable = false, updatable = false, insertable = false)
+//    private int clientId;
 
-    Date getStart();
+    @OneToOne(mappedBy = "visit")
+    @PrimaryKeyJoinColumn
+    private Locker locker;
 
-    void setStart(Date start);
+    @ManyToOne
+    @JoinColumn(name = "client_id")
+    private Client client;
 
-    Date getFinish();
 
-    void setFinish(Date finish);
+    public long getVisitId() {
+        return visitId;
+    }
 
-    int getLockerId();
+    public void setVisitId(long visitId) {
+        this.visitId = visitId;
+    }
 
-    void setLockerId(int lockerId);
+    public Date getStart() {
+        return start;
+    }
 
-    int getClientId();
+    public void setStart(Date start) {
+        this.start = start;
+    }
 
-    void setClientId(int clientId);
+    public Date getFinish() {
+        return finish;
+    }
 
-    void update(Visit visit);
+    public void setFinish(Date finish) {
+        this.finish = finish;
+    }
+
+    public int getLockerId() {
+        return lockerId;
+    }
+
+    public void setLockerId(int lockerId) {
+        this.lockerId = lockerId;
+    }
+
+//    public int getClientId() {
+//        return clientId;
+//    }
+//
+//    public void setClientId(int clientId) {
+//        this.clientId = clientId;
+//    }
+
+
+    public void update(Visit visit){
+        this.start = visit.getStart();
+        this.finish = visit.getFinish();
+        this.lockerId = visit.getLockerId();
+//        this.clientId = visit.getClientId();
+    }
+
+    public Locker getLocker() {
+        return locker;
+    }
+
+    public void setLocker(Locker locker) {
+        this.locker = locker;
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
+    }
 }

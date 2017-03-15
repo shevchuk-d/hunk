@@ -1,6 +1,5 @@
 package com.github.shevchuk.clients.visit.dao;
 
-import com.github.shevchuk.clients.visit.model.SimpleVisit;
 import com.github.shevchuk.clients.visit.model.Visit;
 import com.github.shevchuk.utils.DAOUtils;
 
@@ -19,14 +18,14 @@ public class SimpleDAOVisit implements DAOVisit{
     }
 
     public void deleteVisit(long visitId) {
-        daoUtils.delete(sessionFactory, visitId, SimpleVisit.class);
+        daoUtils.delete(sessionFactory, visitId, Visit.class);
     }
 
     @Override
     public void updateVisit(long visitId, Visit updater) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
-        Visit clientPersistent = session.load(SimpleVisit.class, visitId);
+        Visit clientPersistent = session.load(Visit.class, visitId);
         clientPersistent.update(updater);
         session.update(clientPersistent);
         transaction.commit();
@@ -35,7 +34,7 @@ public class SimpleDAOVisit implements DAOVisit{
 
     @Override
     public Visit getVisitById(long visitId) {
-        return (SimpleVisit) daoUtils.getById(sessionFactory, visitId, SimpleVisit.class);
+        return (Visit) daoUtils.getById(sessionFactory, visitId, Visit.class);
     }
 
     public void setSessionFactory(SessionFactory sessionFactory) {

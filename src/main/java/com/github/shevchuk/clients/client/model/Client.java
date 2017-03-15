@@ -1,26 +1,73 @@
 package com.github.shevchuk.clients.client.model;
 
-
 import com.github.shevchuk.clients.visit.model.Visit;
 
+import javax.persistence.*;
 import java.util.List;
 
-public interface Client {
 
-    long getClientId();
-    void setClientId(long clientId);
+@Entity
+@Table(name = "clients")
+public class Client {
+    @Id
+    @Column(name = "client_id", nullable = false, updatable = false, insertable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long clientId;
 
-    String getName();
-    void setName(String name);
+    @Column(name = "name")
+    private String name;
 
-    String getSex();
-    void setSex(String sex);
+    @Column(name = "sex")
+    private String sex;
 
-    List<Visit> getVisits();
-    void setVisits(List<Visit> visits);
+    @OneToMany(mappedBy = "client")
+    private List<Visit> visits;
 
-    Visit getAverageVisit();
-    void setAverageVisit(Visit averageVisit);
+    @Transient
+    private Visit averageVisit;
 
-    void update(Client client);
+    public long getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(long clientId) {
+        this.clientId = clientId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public List<Visit> getVisits() {
+        return visits;
+    }
+
+    public void setVisits(List<Visit> visits) {
+        this.visits = visits;
+    }
+
+    public Visit getAverageVisit() {
+        return averageVisit;
+    }
+
+    public void setAverageVisit(Visit averageVisit) {
+        this.averageVisit = averageVisit;
+    }
+
+    public void update(Client client){
+        this.name = client.getName();
+        this.sex = client.getSex();
+    }
 }
