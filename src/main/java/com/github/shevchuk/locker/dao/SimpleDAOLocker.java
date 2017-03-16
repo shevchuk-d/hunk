@@ -39,10 +39,12 @@ public class SimpleDAOLocker implements DAOLocker {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         Query q = session.createQuery
-                ("select l from Visit as v join " +
-                        "v.locker l where v.start is not null and v.finish is null");
-
+                ("from Visit as v " +
+                        "join v.locker l " +
+                        "where v.start is not null " +
+                        "and v.finish is null");
         List<Locker> lockers = q.list();
+        lockers.forEach(locker -> System.out.println(locker.getLockerId() + " - " + locker.getNumber()));
         transaction.commit();
         session.close();
         return lockers;

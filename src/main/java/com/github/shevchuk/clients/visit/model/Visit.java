@@ -19,13 +19,11 @@ public class Visit {
     private Date start;
     @Column(name = "finish")
     private Date finish;
-    @Column(name = "locker_id")
-    private int lockerId;
-//    @Column(name = "client_id", nullable = false, updatable = false, insertable = false)
-//    private int clientId;
+//    @Column(name = "locker_id")
+//    private int lockerId;
 
-    @OneToOne(mappedBy = "visit")
-    @PrimaryKeyJoinColumn
+    @OneToOne
+    @JoinColumn(name = "locker_id")
     private Locker locker;
 
     @ManyToOne
@@ -57,13 +55,13 @@ public class Visit {
         this.finish = finish;
     }
 
-    public int getLockerId() {
-        return lockerId;
-    }
+//    public int getLockerId() {
+//        return lockerId;
+//    }
 
-    public void setLockerId(int lockerId) {
-        this.lockerId = lockerId;
-    }
+//    public void setLockerId(int lockerId) {
+//        this.lockerId = lockerId;
+//    }
 
 //    public int getClientId() {
 //        return clientId;
@@ -77,7 +75,7 @@ public class Visit {
     public void update(Visit visit){
         this.start = visit.getStart();
         this.finish = visit.getFinish();
-        this.lockerId = visit.getLockerId();
+//        this.lockerId = visit.getLockerId();
 //        this.clientId = visit.getClientId();
     }
 

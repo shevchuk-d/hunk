@@ -40,13 +40,13 @@ public class HunkApplication {
 
 //		Client client = new Client();
 //		client.setName("Pankaj");
-//		client.setSex("bi");
-//
+//		client.setSex("none");
+////
 //		IntStream.range( 0, 200 ).forEach(i ->{
 //			client.setName("vazgen_" + i);
 //			daoClient.addClient(client);
 //		} );
-
+//
 //		List<Locker> lockers = new ArrayList<>();
 //
 //		Locker locker0 = new Locker();
@@ -66,7 +66,7 @@ public class HunkApplication {
 //		locker0.setNeighbors(lockers);
 //
 //		daoLocker.addLocker(locker0);
-
+//
 //        IntStream.range( 0, 10 ).forEach(i ->{
 //            Visit visit = new Visit();
 //            visit.setStart(new Date());
@@ -88,8 +88,8 @@ public class HunkApplication {
 //
 //		daoVisit.addVisit(visit);
 
-        List<Locker> lockers = daoLocker.getReservedLockers();
-        lockers.forEach(locker -> System.out.println(locker.getLockerId()));
+        List<Locker> lockerss = daoLocker.getReservedLockers();
+//        lockerss.forEach(locker -> System.out.println(locker.getLockerId() + " - " + locker.getNumber()));
 
 		context.close();
 	}

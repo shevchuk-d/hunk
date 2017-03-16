@@ -29,8 +29,8 @@ public class Locker {
     @ManyToMany(mappedBy="neighbors")
     private List<Locker> lockers;
 
-    @OneToOne
-    @PrimaryKeyJoinColumn
+    @OneToOne(mappedBy = "locker", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "locker_id")
     private Visit visit;
 
 
