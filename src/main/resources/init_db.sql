@@ -20,8 +20,8 @@ create table lockers (
 
 create table visits (
 	visit_id bigserial,
-	start date,
-	finish date,
+	start TIMESTAMP,
+	finish TIMESTAMP,
 	locker_id bigint,
   client_id bigint,
   primary key (visit_id),
@@ -35,3 +35,5 @@ create table lockers_neighbors (
   foreign key (locker_id) references lockers(locker_id),
   foreign key (neighbor_id) references lockers(locker_id)
 ) ;
+
+select * from clients
