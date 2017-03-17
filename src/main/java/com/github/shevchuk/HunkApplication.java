@@ -38,55 +38,58 @@ public class HunkApplication {
 		DAOLocker daoLocker = context.getBean(SimpleDAOLocker.class);
 		DAOVisit daoVisit = context.getBean(SimpleDAOVisit.class);
 
-//		Client client = new Client();
-//		client.setName("Pankaj");
-//		client.setSex("none");
-////
-//		IntStream.range( 0, 200 ).forEach(i ->{
-//			client.setName("vazgen_" + i);
-//			daoClient.addClient(client);
-//		} );
+		Client client = new Client();
+		client.setName("Pankaj");
+		client.setSex("none");
 //
-//		List<Locker> lockers = new ArrayList<>();
-//
-//		Locker locker0 = new Locker();
-//		locker0.setNumber(0);
-//
-//		Locker locker1 = new Locker();
-//		locker1.setNumber(1);
-//		Locker locker2 = new Locker();
-//		locker2.setNumber(2);
-//		Locker locker3 = new Locker();
-//		locker3.setNumber(3);
-//
-//		lockers.add(locker1);
-//		lockers.add(locker2);
-//		lockers.add(locker3);
-//
-//		locker0.setNeighbors(lockers);
-//
-//		daoLocker.addLocker(locker0);
-//
-//        IntStream.range( 0, 10 ).forEach(i ->{
-//            Visit visit = new Visit();
-//            visit.setStart(new Date());
-//            visit.setLockerId(4);
-//            visit.setClient(daoClient.getClientById(10));
-//            if (i % 2 == 0) {
-//                System.out.println(i);
-//                System.out.println(i%2);
-//                visit.setFinish(new Date());
-//            }
-//            daoVisit.addVisit(visit);
-//        } );
-//
-//		Visit visit = new Visit();
-//		visit.setStart(new Date());
-//		visit.setLockerId(4);
-//		visit.setClient(daoClient.getClientById(10));
-//
-//
-//		daoVisit.addVisit(visit);
+		IntStream.range( 0, 200 ).forEach(i ->{
+			client.setName("vazgen_" + i);
+			daoClient.addClient(client);
+		} );
+
+		List<Locker> lockers = new ArrayList<>();
+
+		Locker locker0 = new Locker();
+		locker0.setNumber(0);
+
+		Locker locker1 = new Locker();
+		locker1.setNumber(1);
+		Locker locker2 = new Locker();
+		locker2.setNumber(2);
+		Locker locker3 = new Locker();
+		locker3.setNumber(3);
+
+		lockers.add(locker1);
+		lockers.add(locker2);
+		lockers.add(locker3);
+		daoLocker.addLocker(locker1);
+		daoLocker.addLocker(locker2);
+		daoLocker.addLocker(locker3);
+
+		locker0.setNeighbors(lockers);
+
+		daoLocker.addLocker(locker0);
+
+        IntStream.range( 0, 10 ).forEach(i ->{
+            Visit visit = new Visit();
+            visit.setStart(new Date());
+            visit.setLocker(locker0);
+            visit.setClient(daoClient.getClientById(10));
+            if (i % 2 == 0) {
+                System.out.println(i);
+                System.out.println(i%2);
+                visit.setFinish(new Date());
+            }
+            daoVisit.addVisit(visit);
+        } );
+
+		Visit visit = new Visit();
+		visit.setStart(new Date());
+		visit.setLocker(locker0);
+		visit.setClient(daoClient.getClientById(10));
+
+
+		daoVisit.addVisit(visit);
 
         List<Locker> lockerss = daoLocker.getReservedLockers();
 //        lockerss.forEach(locker -> System.out.println(locker.getLockerId() + " - " + locker.getNumber()));
