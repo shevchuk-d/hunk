@@ -7,11 +7,20 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Component;
+
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
 import java.util.List;
 
-
+@Repository
+@Transactional
 public class SimpleDAOLocker implements DAOLocker {
     private SessionFactory sessionFactory;
+
     private DAOUtils daoUtils;
 
     @Override
@@ -31,22 +40,29 @@ public class SimpleDAOLocker implements DAOLocker {
 
     @Override
     public Locker getLockerById(long lockerId) {
-        return sessionFactory.getCurrentSession().load(Locker.class, lockerId);
+        if (null == sessionFactory) {
+            System.out.println(":(");
+            sessionFactory = new ClassPathXmlApplicationContext("spring/root-config.xml").getBean(SessionFactory.class);
+        }
+        return sessionFactory.openSession().get(Locker.class, lockerId);
     }
 
     @Override
     public List<Locker> getReservedLockers(){
+        if (null == sessionFactory) {
+            System.out.println(":(");
+            sessionFactory = new ClassPathXmlApplicationContext("spring/root-config.xml").getBean(SessionFactory.class);
+        }
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         Query q = session.createQuery
-                ("from Visit as v " +
+                ("select l from Visit as v " +
                         "join v.locker l " +
                         "where v.start is not null " +
                         "and v.finish is null");
         List<Locker> lockers = q.list();
-        lockers.forEach(locker -> System.out.println(locker.getLockerId() + " - " + locker.getNumber()));
         transaction.commit();
-        session.close();
+        if (session.isOpen()) session.close();
         return lockers;
     }
 

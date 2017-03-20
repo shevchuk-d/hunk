@@ -3,8 +3,10 @@ package com.github.shevchuk.utils;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
 
-
+@Component
 public class DAOUtils {
 
     public void add(SessionFactory sessionFactory, Object object){
@@ -27,9 +29,11 @@ public class DAOUtils {
     public Object getById(SessionFactory sessionFactory, long objectId, Class entityClass){
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
-        Object client = session.load(entityClass, objectId);
+        Object client = session.get(entityClass, objectId);
         transaction.commit();
         session.close();
         return entityClass.cast(client);
     }
+
+
 }

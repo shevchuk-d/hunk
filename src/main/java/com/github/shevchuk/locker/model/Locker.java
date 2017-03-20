@@ -1,8 +1,10 @@
 package com.github.shevchuk.locker.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.shevchuk.clients.visit.model.Visit;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlTransient;
 import java.util.List;
 
 
@@ -18,17 +20,18 @@ public class Locker {
     @Column(name = "number")
     private int number;
 
-//    @Transient
+    @JsonIgnore
     @ManyToMany(cascade={CascadeType.ALL})
     @JoinTable(name="lockers_neighbors"
             , joinColumns={@JoinColumn(name="locker_id")}
             , inverseJoinColumns={@JoinColumn(name="neighbor_id")})
     private List<Locker> neighbors;
 
-
+    @JsonIgnore
     @ManyToMany(mappedBy="neighbors")
     private List<Locker> lockers;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "locker", cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "locker_id")
     private Visit visit;

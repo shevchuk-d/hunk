@@ -19,13 +19,14 @@
 
     <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
-        <property name="annotatedClasses">
-            <list>
-                <value>com.github.shevchuk.clients.client.model.Client</value>
-                <value>com.github.shevchuk.clients.visit.model.Visit</value>
-                <value>com.github.shevchuk.locker.model.Locker</value>
-            </list>
-        </property>
+        <property name="packagesToScan" value="com.github.shevchuk"/>
+        <!--<property name="annotatedClasses">-->
+            <!--<list>-->
+                <!--<value>com.github.shevchuk.clients.client.model.Client</value>-->
+                <!--<value>com.github.shevchuk.clients.visit.model.Visit</value>-->
+                <!--<value>com.github.shevchuk.locker.model.Locker</value>-->
+            <!--</list>-->
+        <!--</property>-->
         <property name="hibernateProperties">
             <props>
                 <prop key="hibernate.enable_lazy_load_no_trans">true</prop>
@@ -36,22 +37,5 @@
             </props>
         </property>
     </bean>
-
-    <bean id="personDAO" class="com.github.shevchuk.clients.client.dao.SimpleDAOClient">
-        <property name="sessionFactory" ref="sessionFactory" />
-        <property name="daoUtils" ref="daoUtils" />
-    </bean>
-
-    <bean id="visitDAO" class="com.github.shevchuk.clients.visit.dao.SimpleDAOVisit">
-        <property name="sessionFactory" ref="sessionFactory" />
-        <property name="daoUtils" ref="daoUtils" />
-    </bean>
-
-    <bean id="lockerDAO" class="com.github.shevchuk.locker.dao.SimpleDAOLocker">
-        <property name="sessionFactory" ref="sessionFactory" />
-        <property name="daoUtils" ref="daoUtils" />
-    </bean>
-
-    <bean id="daoUtils" class="com.github.shevchuk.utils.DAOUtils"/>
 
 </beans>

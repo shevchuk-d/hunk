@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="personDAO" class="com.github.shevchuk.clients.client.dao.SimpleDAOClient">
+        <property name="sessionFactory" ref="sessionFactory" />
+        <property name="daoUtils" ref="daoUtils" />
+    </bean>
+
+    <bean id="visitDAO" class="com.github.shevchuk.clients.visit.dao.SimpleDAOVisit">
+        <property name="sessionFactory" ref="sessionFactory" />
+        <property name="daoUtils" ref="daoUtils" />
+    </bean>
+
+    <bean id="daoLocker" class="com.github.shevchuk.locker.dao.SimpleDAOLocker">
+        <property name="sessionFactory" ref="sessionFactory" />
+        <property name="daoUtils" ref="daoUtils" />
+    </bean>
+
+
+    <bean id="daoUtils" class="com.github.shevchuk.utils.DAOUtils"/>
+
+
+
+</beans>
