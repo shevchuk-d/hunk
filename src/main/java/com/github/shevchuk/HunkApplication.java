@@ -48,12 +48,11 @@ public class HunkApplication {
 
 //		{
 //			Client client = new Client();
-//			client.setName("Pankaj");
 //			client.setSex("none");
 //
 //			IntStream.range( 0, 200 ).forEach(i ->{
 //				client.setName("vazgen_" + i);
-//				daoClient.addClient(client);
+//                personDAO.addClient(client);
 //			} );
 //
 //			List<Locker> lockers = new ArrayList<>();
@@ -87,23 +86,25 @@ public class HunkApplication {
 //				Visit visit = new Visit();
 //				visit.setStart(new Date());
 //				visit.setLocker(lockers.get(i/2));
-//				visit.setClient(daoClient.getClientById(10));
+//				visit.setClient(personDAO.getClientById(10));
 //				if (i % 2 == 0) {
 //					visit.setFinish(new Date());
 //					visit.setLocker(null);
 //				}
-//				daoVisit.addVisit(visit);
+//                visitDAO.addVisit(visit);
 //			} );
 //
 //			Visit visit = new Visit();
 //			visit.setStart(new Date());
 //			visit.setLocker(locker0);
-//			visit.setClient(daoClient.getClientById(10));
+//			visit.setClient(personDAO.getClientById(10));
 //
-//			daoVisit.addVisit(visit);
+//            visitDAO.addVisit(visit);
 //		}
-        System.out.println(sessionController.startSessionZ(1));
-        List<Locker> lockerss = sessionController.startSession();
+
+
+        System.out.println(sessionController.getLockerById(1));
+        List<Locker> lockerss = sessionController.getReservedLockers();
 //        List<Locker> lockerss = daoLocker.getReservedLockers();
         lockerss.forEach(locker -> System.out.println(locker.getLockerId() + " - " + locker.getNumber()));
         context.close();
@@ -112,7 +113,6 @@ public class HunkApplication {
     @Bean
     public ServletRegistrationBean jerseyServlet() {
         ServletRegistrationBean registration = new ServletRegistrationBean(new ServletContainer(), "/*");
-        // our rest resources will be available in the path /rest/*
         registration.addInitParameter(ServletProperties.JAXRS_APPLICATION_CLASS, JerseyConfig.class.getName());
         return registration;
     }

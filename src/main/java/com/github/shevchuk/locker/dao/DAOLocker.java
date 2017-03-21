@@ -12,4 +12,10 @@ public interface DAOLocker {
     Locker getLockerById(long lockerId);
 
     List<Locker> getReservedLockers();
+
+    List<Locker> getLockers();
+
+    Object getNeighborsById(long id);
+
+    List<Locker> getNeighborsForReservedLockers();
 }

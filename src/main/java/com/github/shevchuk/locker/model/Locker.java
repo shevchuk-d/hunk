@@ -1,15 +1,16 @@
 package com.github.shevchuk.locker.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.github.shevchuk.clients.visit.model.Visit;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlTransient;
 import java.util.List;
 
-
 @Entity
 @Table(name = "lockers")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Locker {
 
     @Id

@@ -40,19 +40,13 @@ public class SimpleDAOLocker implements DAOLocker {
 
     @Override
     public Locker getLockerById(long lockerId) {
-        if (null == sessionFactory) {
-            System.out.println(":(");
-            sessionFactory = new ClassPathXmlApplicationContext("spring/root-config.xml").getBean(SessionFactory.class);
-        }
-        return sessionFactory.openSession().get(Locker.class, lockerId);
+        ifSessionFactoryIsNull();
+        return sessionFactory.openSession().load(Locker.class, lockerId);
     }
 
     @Override
     public List<Locker> getReservedLockers(){
-        if (null == sessionFactory) {
-            System.out.println(":(");
-            sessionFactory = new ClassPathXmlApplicationContext("spring/root-config.xml").getBean(SessionFactory.class);
-        }
+        ifSessionFactoryIsNull();
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         Query q = session.createQuery
@@ -67,6 +61,49 @@ public class SimpleDAOLocker implements DAOLocker {
     }
 
 
+    @Override
+    public List<Locker> getLockers(){
+        ifSessionFactoryIsNull();
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        Query q = session.createQuery
+                ("from Locker");
+        List<Locker> lockers = q.list();
+        transaction.commit();
+        if (session.isOpen()) session.close();
+        return lockers;
+    }
+
+    @Override
+    public List<Locker> getNeighborsById(long id) {
+        ifSessionFactoryIsNull();
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        Query q = session.createQuery
+                ("select neighbors from Locker l join l.lockers neighbors where l.id = :id").setParameter("id", id);
+        List<Locker> lockers = q.list();
+        transaction.commit();
+        if (session.isOpen()) session.close();
+        return lockers;
+    }
+
+    @Override
+    public List<Locker> getNeighborsForReservedLockers() {
+        ifSessionFactoryIsNull();
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        Query q = session.createQuery
+                ("select n from Visit as v " +
+                        "join v.locker l " +
+                        "join l.neighbors n " +
+                        "where v.start is not null " +
+                        "and v.finish is null");
+        List<Locker> lockers = q.list();
+        transaction.commit();
+        if (session.isOpen()) session.close();
+        return lockers;
+    }
+
     public void setSessionFactory(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
@@ -77,5 +114,10 @@ public class SimpleDAOLocker implements DAOLocker {
 
     public DAOUtils getDaoUtils() {
         return daoUtils;
+    }
+
+    private void ifSessionFactoryIsNull(){
+        if (null == sessionFactory)
+            sessionFactory = new ClassPathXmlApplicationContext("spring/root-config.xml").getBean(SessionFactory.class);
     }
 }

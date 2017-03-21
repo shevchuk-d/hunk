@@ -1,5 +1,3 @@
-create database hunk;
-
 drop table if exists lockers_neighbors;
 drop table if exists visits;
 drop table if exists lockers;
@@ -35,5 +33,3 @@ create table lockers_neighbors (
   foreign key (locker_id) references lockers(locker_id),
   foreign key (neighbor_id) references lockers(locker_id)
 ) ;
-
-select * from clients
