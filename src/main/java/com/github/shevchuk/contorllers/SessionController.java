@@ -35,6 +35,14 @@ public class SessionController {
     }
 
     @GET
+    @Path("/lockers/appropriate")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Transactional
+    public List<Locker> getAppropriateLockers(){
+        return daoLocker.getAppropriateLockers();
+    }
+
+    @GET
     @Path("/lockers/all")
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional

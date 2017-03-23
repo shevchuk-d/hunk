@@ -18,4 +18,6 @@ public interface DAOLocker {
     Object getNeighborsById(long id);
 
     List<Locker> getNeighborsForReservedLockers();
+
+    List<Locker> getAppropriateLockers();
 }

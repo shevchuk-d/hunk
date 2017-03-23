@@ -41,22 +41,61 @@ BEGIN
   END LOOP;
 END $fill_clients$;
 
-DO $activate_visits$
+do $smth$
 BEGIN
-  FOR i in 1..100 LOOP
-    IF ( i % 5 =0 ) THEN
-      INSERT INTO visits(start, finish, locker_id, client_id) VALUES (current_timestamp, NULL, i, i );
-    END IF;
-  END LOOP;
-END $activate_visits$;
+  FOR j in 1..20 LOOP
+--     DO $activate_visits$
+--     BEGIN
+      FOR i in 1..100 LOOP
+        IF ( i % 5 =0 ) THEN
+          INSERT INTO visits(start, finish, locker_id, client_id) VALUES (current_timestamp, NULL, i, i );
+        END IF;
+      END LOOP;
+--     END $activate_visits$;
 
-DO $finish_visits$
-BEGIN
-  FOR i in 1..100 LOOP
-    IF ( i % 2 = 0 ) THEN
-      UPDATE visits SET finish = current_timestamp + interval '2 hours' WHERE visit_id = i;
-    END IF;
   END LOOP;
-END $finish_visits$;
+END $smth$;
 
-SELECT * FROM visits
+    DO $finish_visits$
+    BEGIN
+FOR k in 1..400 LOOP
+  IF ( k % 2 = 0 ) THEN
+    UPDATE visits SET finish = current_timestamp + interval '14 minutes' WHERE visit_id = k;
+  END IF;
+  IF ( k % 3 = 0 ) THEN
+    UPDATE visits SET finish = current_timestamp + interval '14 minutes' WHERE visit_id = k;
+  END IF;
+  IF ( k % 7 = 0 ) THEN
+    UPDATE visits SET finish = current_timestamp + interval '14 minutes' WHERE visit_id = k;
+  END IF;
+END LOOP;
+    END $finish_visits$;
+
+
+SELECT DISTINCT *
+FROM visits v
+JOIN lockers l
+  ON v.locker_id = l.locker_id
+JOIN clients c
+  ON v.client_id = c.client_id
+WHERE current_timestamp
+  BETWEEN
+    v.start
+      AND
+    v.start + INTERVAL '15 minutes'
+or current_timestamp >=
+    v.start + (SELECT avg(finish - start)
+                 FROM visits
+                 WHERE visits.client_id = c.client_id
+    )::INTERVAL - INTERVAL '15 minutes'
+;
+
+
+INSERT INTO visits(start, finish, locker_id, client_id) VALUES (current_timestamp, NULL, 30, 30 );
+
+SELECT  * -- avg(visits.finish - start)::INTERVAL
+      FROM visits
+      WHERE visits.client_id = 30
+-- WHERE finish NOTNULL
+;
+

@@ -7,6 +7,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
+import org.joda.time.DateTime;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -103,6 +105,46 @@ public class SimpleDAOLocker implements DAOLocker {
         if (session.isOpen()) session.close();
         return lockers;
     }
+
+    @Override
+    public List<Locker> getAppropriateLockers() {
+        ifSessionFactoryIsNull();
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        Query getInappropriateNeighborsLockers = session.createQuery
+                ("select n from Visit as v " +
+                    "join v.locker l " +
+                    "join l.neighbors n " +
+                "where v.start is not null " +
+                    "and v.finish is null " +
+                    "and (  " +
+                        "( current_timestamp > 1  " +
+                        "and current_timestamp < v.start )  " +
+                    "or " +
+                        "( current_timestamp > :start " +
+                        "and current_timestamp < :estimatedFinish) " +
+                    ")"
+                );
+        getInappropriateNeighborsLockers.setParameter("estimatedFinish", new DateTime().plusHours(2).minusMinutes(15).toDate());
+        getInappropriateNeighborsLockers.setParameter("start", new DateTime().plusMinutes(15).toDate());
+        List<Locker> lockers = getInappropriateNeighborsLockers.list();
+        transaction.commit();
+        if (session.isOpen()) session.close();
+        return lockers;
+    }
+
+    private Date getAverageVisitTime(){
+        ifSessionFactoryIsNull();
+        Session session = sessionFactory.openSession();
+        Query getAverageVisitTime = session.createQuery
+                ("select avg(v.finish - v.start) from Visit v group by v.client");
+        Date averageVisitTime = (Date) getAverageVisitTime.uniqueResult();
+        Transaction transaction = session.beginTransaction();
+        transaction.commit();
+        if (session.isOpen()) session.close();
+        return averageVisitTime;
+    }
+
 
     public void setSessionFactory(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;

@@ -3,6 +3,7 @@ package com.github.shevchuk.clients.visit.model;
 import com.github.shevchuk.clients.client.model.Client;
 import com.github.shevchuk.locker.model.Locker;
 import com.sun.deploy.util.SessionState;
+import org.joda.time.DateTime;
 
 import javax.persistence.*;
 import java.util.Date;
