@@ -2,21 +2,16 @@ package com.github.shevchuk.locker.dao;
 
 import com.github.shevchuk.locker.model.Locker;
 import com.github.shevchuk.utils.DAOUtils;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
+import org.hibernate.*;
 
-import org.joda.time.DateTime;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.stereotype.Component;
+
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+
 
 @Repository
 @Transactional
@@ -90,44 +85,31 @@ public class SimpleDAOLocker implements DAOLocker {
     }
 
     @Override
-    public List<Locker> getNeighborsForReservedLockers() {
+    public Collection<Locker> getInappropriateLockers() {
         ifSessionFactoryIsNull();
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
-        Query q = session.createQuery
-                ("select n from Visit as v " +
-                        "join v.locker l " +
-                        "join l.neighbors n " +
-                        "where v.start is not null " +
-                        "and v.finish is null");
-        List<Locker> lockers = q.list();
-        transaction.commit();
-        if (session.isOpen()) session.close();
-        return lockers;
-    }
-
-    @Override
-    public List<Locker> getAppropriateLockers() {
-        ifSessionFactoryIsNull();
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        Query getInappropriateNeighborsLockers = session.createQuery
-                ("select n from Visit as v " +
-                    "join v.locker l " +
-                    "join l.neighbors n " +
-                "where v.start is not null " +
-                    "and v.finish is null " +
-                    "and (  " +
-                        "( current_timestamp > 1  " +
-                        "and current_timestamp < v.start )  " +
-                    "or " +
-                        "( current_timestamp > :start " +
-                        "and current_timestamp < :estimatedFinish) " +
-                    ")"
-                );
-        getInappropriateNeighborsLockers.setParameter("estimatedFinish", new DateTime().plusHours(2).minusMinutes(15).toDate());
-        getInappropriateNeighborsLockers.setParameter("start", new DateTime().plusMinutes(15).toDate());
-        List<Locker> lockers = getInappropriateNeighborsLockers.list();
+        Query getInappropriateNeighborsLockers = session.createSQLQuery
+                ("SELECT l.locker_id, l.number\n" +
+                        "FROM visits v\n" +
+                        "JOIN lockers l\n" +
+                        "  ON v.locker_id = l.locker_id\n" +
+                        "JOIN clients c\n" +
+                        "  ON v.client_id = c.client_id\n" +
+                        "WHERE finish ISNULL\n" +
+                        "AND v.start NOTNULL\n" +
+                        "AND (current_timestamp\n" +
+                        "  BETWEEN\n" +
+                        "    v.start\n" +
+                        "      AND\n" +
+                        "    v.start + INTERVAL '15 minutes'\n" +
+                        "or current_timestamp >=\n" +
+                        "    v.start + (SELECT avg(finish - start)\n" +
+                        "                 FROM visits\n" +
+                        "                 WHERE visits.client_id = c.client_id\n" +
+                        "    ) - INTERVAL '15 minutes')\n" +
+                        ";").addEntity(Locker.class);
+        List<Locker> lockers = (List<Locker>)getInappropriateNeighborsLockers.list();
         transaction.commit();
         if (session.isOpen()) session.close();
         return lockers;

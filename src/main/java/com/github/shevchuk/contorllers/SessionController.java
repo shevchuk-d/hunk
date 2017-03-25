@@ -9,8 +9,9 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
-
 
 @Path("/session")
 @RestController
@@ -30,16 +31,18 @@ public class SessionController {
     @Path("/lockers/reserved/neighbors")
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    public List<Locker> getNeighborsForReservedLockers(){
-        return daoLocker.getNeighborsForReservedLockers();
+    public Collection<Locker> getNeighborsForReservedLockers(){
+        Collection<Locker> inappropriateLockers = new HashSet<>();
+        getInappropriateLockers().forEach(l -> inappropriateLockers.addAll(l.getNeighbors()));
+        return inappropriateLockers;
     }
 
     @GET
-    @Path("/lockers/appropriate")
+    @Path("/lockers/inappropriate")
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    public List<Locker> getAppropriateLockers(){
-        return daoLocker.getAppropriateLockers();
+    public Collection<Locker> getInappropriateLockers(){
+        return daoLocker.getInappropriateLockers();
     }
 
     @GET

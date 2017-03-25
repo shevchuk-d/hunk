@@ -83,4 +83,15 @@ public class Locker {
     public void setVisit(Visit visit) {
         this.visit = visit;
     }
+
+    @Override
+    public int hashCode() {
+        return String.valueOf(number).hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Locker && this.hashCode() == obj.hashCode();
+    }
 }
+

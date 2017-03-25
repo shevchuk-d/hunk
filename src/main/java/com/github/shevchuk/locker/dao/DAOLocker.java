@@ -3,6 +3,7 @@ package com.github.shevchuk.locker.dao;
 
 import com.github.shevchuk.locker.model.Locker;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface DAOLocker {
@@ -17,7 +18,5 @@ public interface DAOLocker {
 
     Object getNeighborsById(long id);
 
-    List<Locker> getNeighborsForReservedLockers();
-
-    List<Locker> getAppropriateLockers();
+    Collection<Locker> getInappropriateLockers();
 }
