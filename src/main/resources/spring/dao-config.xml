@@ -21,6 +21,9 @@
 
     <bean id="daoUtils" class="com.github.shevchuk.utils.DAOUtils"/>
 
-
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/templates/"/>
+        <property name="suffix" value=".ftl"/>
+    </bean>
 
 </beans>

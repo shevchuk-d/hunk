@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en"  ng-app="hunk">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/app.css">
+
+    <!-- jQuery library -->
+    <script src="js/lib/angular.min.js"></script>
+    <script src="js/lib/angular-ui-router.min.js"></script>
+    <script src="js/lib/localforage.min.js"></script>
+    <script src="js/lib/ngStorage.min.js"></script>
+    <script src="js/app/app.js"></script>
+
+</head>
+<body>
+    <div class="row" ng-controller="hunk">
+        <div ng-repeat="x in records" class="btn btn-sq-lg btn-primary">{{x.Name}}</div>
+    </div>
+</body>
+</html>

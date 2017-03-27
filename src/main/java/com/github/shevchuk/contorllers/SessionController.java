@@ -4,6 +4,8 @@ import com.github.shevchuk.locker.dao.DAOLocker;
 import com.github.shevchuk.locker.model.Locker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.ws.rs.*;
@@ -13,22 +15,21 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
-@Path("/session")
 @RestController
 public class SessionController {
     @Autowired
     private DAOLocker daoLocker;
 
-    @GET
-    @Path("/lockers/reserved")
+
+    @RequestMapping(value = "/lockers/reserved", method = RequestMethod.GET)
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
     public List<Locker> getReservedLockers(){
         return daoLocker.getReservedLockers();
     }
 
-    @GET
-    @Path("/lockers/reserved/neighbors")
+    @RequestMapping(value = "/lockers/reserved/neighbors", method = RequestMethod.GET)
+//    @Path("/lockers/reserved/neighbors")
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
     public Collection<Locker> getNeighborsForReservedLockers(){
@@ -45,10 +46,7 @@ public class SessionController {
         return daoLocker.getInappropriateLockers();
     }
 
-    @GET
-    @Path("/lockers/all")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Transactional
+    @RequestMapping(value = "/lockers/all", method = RequestMethod.GET)
     public List<Locker> getAllLockers(){
         return daoLocker.getLockers();
     }
