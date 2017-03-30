@@ -22,37 +22,61 @@
         <div class="center-block">
             <div class="row">
                 <div ng-repeat="locker in lockers">
-                    <div ng-if="locker.number % 2 == 0 && locker.number <= 50" class="col-lg-1">
-                        <button ng-if="reservedLockers.includes(locker) == true" class="btn-sq-lg btn-danger">{{ locker.number }}</button>
-                        <button ng-if="reservedLockers.includes(locker) == false" class="btn-sq-lg">{{ locker.number }}</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div ng-repeat="locker in lockers">
                     <div ng-if="locker.number % 2 == 1 && locker.number <= 50" class="col-lg-1">
-                        <button ng-if="reservedLockers.includes(locker) == true" class="btn-sq-lg btn-danger">{{ locker.number }}</button>
-                        <button ng-if="reservedLockers.includes(locker) == false" class="btn-sq-lg">{{ locker.number }}</button>
-                    </div>
-                </div>
-            </div>
-                <p></p>
-                <p></p>
-            <div class="row">
-                <div ng-repeat="locker in lockers">
-                    <div ng-if="locker.number % 2 == 0 && locker.number > 50" class="col-lg-1">
-                        <button ng-if="reservedLockers.includes(locker) == true" class="btn-sq-lg btn-danger">{{ locker.number }}</button>
-                        <button ng-if="reservedLockers.includes(locker) == false" class="btn-sq-lg">{{ locker.number }}</button>
+                        <button ng-if="arrayContains(reservedLockers, locker)"
+                                class="col-lg-25 btn-danger">{{ locker.number }}</button>
+                        <button ng-if="!arrayContains(reservedLockers, locker)
+                                        && !arrayContains(reservedLockersNeighbors, locker)"
+                                class="col-lg-25">{{ locker.number }}</button>
+                        <button ng-if="!arrayContains(reservedLockers, locker)
+                                        && arrayContains(reservedLockersNeighbors, locker)"
+                                class="col-lg-25 bg-warning">{{ locker.number }}</button>
                     </div>
                 </div>
             </div>
 
+            <div class="row">
+                <div ng-repeat="locker in lockers">
+                    <div ng-if="locker.number % 2 == 0 && locker.number <= 50" class="col-lg-1">
+                        <button ng-if="arrayContains(reservedLockers, locker)"
+                                class="col-lg-25 btn-danger">{{ locker.number }}</button>
+                        <button ng-if="!arrayContains(reservedLockers, locker)
+                                        && !arrayContains(reservedLockersNeighbors, locker)"
+                                class="col-lg-25">{{ locker.number }}</button>
+                        <button ng-if="!arrayContains(reservedLockers, locker)
+                                        && arrayContains(reservedLockersNeighbors, locker)"
+                                class="col-lg-25 bg-warning">{{ locker.number }}</button>
+                    </div>
+                </div>
+            </div>
+                <p></p>
+                <p></p>
             <div class="row">
                 <div ng-repeat="locker in lockers">
                     <div ng-if="locker.number % 2 == 1 && locker.number > 50" class="col-lg-1">
-                        <button ng-if="reservedLockers.includes(locker) == true" class="btn-sq-lg btn-danger">{{ locker.number }}</button>
-                        <button ng-if="reservedLockers.includes(locker) == false" class="btn-sq-lg">{{ locker.number }}</button>
+                        <button ng-if="arrayContains(reservedLockers, locker)"
+                                class="col-lg-25 btn-danger">{{ locker.number }}</button>
+                        <button ng-if="!arrayContains(reservedLockers, locker)
+                                        && !arrayContains(reservedLockersNeighbors, locker)"
+                                class="col-lg-25">{{ locker.number }}</button>
+                        <button ng-if="!arrayContains(reservedLockers, locker)
+                                        && arrayContains(reservedLockersNeighbors, locker)"
+                                class="col-lg-25 bg-warning">{{ locker.number }}</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div ng-repeat="locker in lockers">
+                    <div ng-if="locker.number % 2 == 0 && locker.number > 50" class="col-lg-1">
+                        <button ng-if="arrayContains(reservedLockers, locker)"
+                                class="col-lg-25 btn-danger">{{ locker.number }}</button>
+                        <button ng-if="!arrayContains(reservedLockers, locker)
+                                        && !arrayContains(reservedLockersNeighbors, locker)"
+                                class="col-lg-25">{{ locker.number }}</button>
+                        <button ng-if="!arrayContains(reservedLockers, locker)
+                                        && arrayContains(reservedLockersNeighbors, locker)"
+                                class="col-lg-25 bg-warning">{{ locker.number }}</button>
                     </div>
                 </div>
             </div>
