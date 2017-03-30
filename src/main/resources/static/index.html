@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"  ng-app="hunk">
+<html lang="en"   ng-app="ngrepeatApp">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -16,8 +16,49 @@
 
 </head>
 <body>
-    <div class="row" ng-controller="hunk">
-        <div ng-repeat="x in records" class="btn btn-sq-lg btn-primary">{{x.Name}}</div>
+
+<div ng-controller="customersCtrl">
+    <div class="container">
+        <div class="center-block">
+            <div class="row">
+                <div ng-repeat="locker in lockers">
+                    <div ng-if="locker.number % 2 == 0 && locker.number <= 50" class="col-lg-1">
+                        <button ng-if="reservedLockers.includes(locker) == true" class="btn-sq-lg btn-danger">{{ locker.number }}</button>
+                        <button ng-if="reservedLockers.includes(locker) == false" class="btn-sq-lg">{{ locker.number }}</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div ng-repeat="locker in lockers">
+                    <div ng-if="locker.number % 2 == 1 && locker.number <= 50" class="col-lg-1">
+                        <button ng-if="reservedLockers.includes(locker) == true" class="btn-sq-lg btn-danger">{{ locker.number }}</button>
+                        <button ng-if="reservedLockers.includes(locker) == false" class="btn-sq-lg">{{ locker.number }}</button>
+                    </div>
+                </div>
+            </div>
+                <p></p>
+                <p></p>
+            <div class="row">
+                <div ng-repeat="locker in lockers">
+                    <div ng-if="locker.number % 2 == 0 && locker.number > 50" class="col-lg-1">
+                        <button ng-if="reservedLockers.includes(locker) == true" class="btn-sq-lg btn-danger">{{ locker.number }}</button>
+                        <button ng-if="reservedLockers.includes(locker) == false" class="btn-sq-lg">{{ locker.number }}</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div ng-repeat="locker in lockers">
+                    <div ng-if="locker.number % 2 == 1 && locker.number > 50" class="col-lg-1">
+                        <button ng-if="reservedLockers.includes(locker) == true" class="btn-sq-lg btn-danger">{{ locker.number }}</button>
+                        <button ng-if="reservedLockers.includes(locker) == false" class="btn-sq-lg">{{ locker.number }}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
+
 </body>
 </html>
