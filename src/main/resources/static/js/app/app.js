@@ -15,10 +15,21 @@ app.controller('customersCtrl', function($scope, $http) {
     });
 
     $scope.arrayContains = function (array, obj) {
-        // console.log(JSON.stringify(array).indexOf(JSON.stringify(obj)));
-        // console.log(JSON.stringify(array));
-        // console.log(JSON.stringify(obj));
         return angular.toJson(array).indexOf(angular.toJson(obj)) >= 0;
-    }
+    };
+
+    $scope.hunk = {
+        "clientId": 0,
+        "name": "",
+        "sex": ""
+    };
+
+
+    $scope.getHunk = function(id) {
+        $http.get("http://localhost:8080/hunk/client/" + id).then(function(response) {
+            $scope.hunk = response.data;
+        });
+    };
+
 });
 

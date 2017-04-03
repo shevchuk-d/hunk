@@ -135,3 +135,6 @@ WHERE locker_id in (
                            WHERE visits.client_id = c.client_id
                 )::INTERVAL - INTERVAL '15 minutes')
 )
+;
+
+

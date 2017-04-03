@@ -26,7 +26,9 @@ public class SimpleDAOVisit implements DAOVisit{
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         Visit clientPersistent = session.load(Visit.class, visitId);
-        clientPersistent.update(updater);
+        clientPersistent.setClient(updater.getClient());
+        clientPersistent.setFinish(updater.getFinish());
+        clientPersistent.setStart(updater.getStart());
         session.update(clientPersistent);
         transaction.commit();
         session.close();

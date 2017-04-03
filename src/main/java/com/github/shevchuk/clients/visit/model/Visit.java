@@ -56,30 +56,6 @@ public class Visit {
         this.finish = finish;
     }
 
-//    public int getLockerId() {
-//        return lockerId;
-//    }
-
-//    public void setLockerId(int lockerId) {
-//        this.lockerId = lockerId;
-//    }
-
-//    public int getClientId() {
-//        return clientId;
-//    }
-//
-//    public void setClientId(int clientId) {
-//        this.clientId = clientId;
-//    }
-
-
-    public void update(Visit visit){
-        this.start = visit.getStart();
-        this.finish = visit.getFinish();
-//        this.lockerId = visit.getLockerId();
-//        this.clientId = visit.getClientId();
-    }
-
     public Locker getLocker() {
         return locker;
     }

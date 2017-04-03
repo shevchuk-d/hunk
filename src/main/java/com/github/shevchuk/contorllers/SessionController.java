@@ -1,16 +1,19 @@
 package com.github.shevchuk.contorllers;
 
+import com.github.shevchuk.clients.client.dao.DAOClient;
+import com.github.shevchuk.clients.client.model.Client;
 import com.github.shevchuk.locker.dao.DAOLocker;
 import com.github.shevchuk.locker.model.Locker;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -19,6 +22,10 @@ import java.util.List;
 public class SessionController {
     @Autowired
     private DAOLocker daoLocker;
+
+    @Qualifier("simpleDAOClient")
+    @Autowired
+    private DAOClient daoClient;
 
 
     @RequestMapping(value = "/lockers/reserved", method = RequestMethod.GET)
@@ -29,19 +36,15 @@ public class SessionController {
     }
 
     @RequestMapping(value = "/lockers/reserved/neighbors", method = RequestMethod.GET)
-//    @Path("/lockers/reserved/neighbors")
     @Produces(MediaType.APPLICATION_JSON)
-    @Transactional
     public Collection<Locker> getNeighborsForReservedLockers(){
         Collection<Locker> inappropriateLockers = new HashSet<>();
         getInappropriateLockers().forEach(l -> inappropriateLockers.addAll(l.getNeighbors()));
         return inappropriateLockers;
     }
 
-    @GET
-    @Path("/lockers/inappropriate")
+    @RequestMapping(value = "/lockers/inappropriate", method = RequestMethod.GET)
     @Produces(MediaType.APPLICATION_JSON)
-    @Transactional
     public Collection<Locker> getInappropriateLockers(){
         return daoLocker.getInappropriateLockers();
     }
@@ -51,33 +54,16 @@ public class SessionController {
         return daoLocker.getLockers();
     }
 
-    @GET
-    @Path("/size")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Transactional
-    public int getReservedLockersQuantity(){
-        return daoLocker.getReservedLockers().size();
-    }
-
-    @GET
-    @Path("/locker/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Transactional
-    public Response getLockerById(@PathParam("id") long id){
-        return Response.ok().entity(daoLocker.getLockerById(id)).build();
-    }
-
-
-    @GET
-    @Path("/locker/{id}/neighbors")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Transactional
-    public Response getNeighborsById(@PathParam("id") long id){
-        return Response.ok().entity(daoLocker.getNeighborsById(id)).build();
+    @RequestMapping(value = "/client/{id}", method = RequestMethod.GET)
+    public Client getClientById(@PathVariable("id") long id){
+        return daoClient.getClientById(id);
     }
 
     public void setLockerDAO(DAOLocker daoLocker) {
         this.daoLocker = daoLocker;
     }
 
+    public void setDaoClient(DAOClient daoClient) {
+        this.daoClient = daoClient;
+    }
 }

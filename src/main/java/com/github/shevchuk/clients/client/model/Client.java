@@ -1,5 +1,6 @@
 package com.github.shevchuk.clients.client.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.shevchuk.clients.visit.model.Visit;
 
 import javax.persistence.*;
@@ -20,7 +21,8 @@ public class Client {
     @Column(name = "sex")
     private String sex;
 
-    @OneToMany(mappedBy = "client")
+    @JsonIgnore
+    @OneToMany(mappedBy = "client", fetch = FetchType.LAZY)
     private List<Visit> visits;
 
     @Transient
@@ -66,8 +68,5 @@ public class Client {
         this.averageVisit = averageVisit;
     }
 
-    public void update(Client client){
-        this.name = client.getName();
-        this.sex = client.getSex();
-    }
+
 }

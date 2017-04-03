@@ -20,6 +20,23 @@
 <div ng-controller="customersCtrl">
     <div class="container">
         <div class="center-block">
+            <p>Search:</p>
+            <form >
+                <label>
+                    <input type="text" ng-model="hunk_search.clientId">
+                </label>
+                <label>
+                    <input type="button" ng-click="getHunk(hunk_search.clientId)">
+                </label>
+            </form>
+            <span>{{hunk.clientId}}</span>
+            <span>{{hunk.name}}</span>
+            <span>{{hunk.sex}}</span>
+        </div>
+
+
+
+        <div class="center-block">
             <div class="row">
                 <div ng-repeat="locker in lockers">
                     <div ng-if="locker.number % 2 == 1 && locker.number <= 50" class="col-lg-1">

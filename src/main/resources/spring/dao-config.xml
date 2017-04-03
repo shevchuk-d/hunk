@@ -3,7 +3,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="personDAO" class="com.github.shevchuk.clients.client.dao.SimpleDAOClient">
+    <bean id="daoClient" class="com.github.shevchuk.clients.client.dao.SimpleDAOClient">
         <property name="sessionFactory" ref="sessionFactory" />
         <property name="daoUtils" ref="daoUtils" />
     </bean>
@@ -21,9 +21,6 @@
 
     <bean id="daoUtils" class="com.github.shevchuk.utils.DAOUtils"/>
 
-    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-        <property name="prefix" value="/templates/"/>
-        <property name="suffix" value=".ftl"/>
-    </bean>
+
 
 </beans>

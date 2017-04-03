@@ -6,10 +6,12 @@ import com.github.shevchuk.utils.DAOUtils;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
-
-@Repository
+@Component
 public class SimpleDAOClient implements DAOClient {
 
     private SessionFactory sessionFactory;
@@ -30,7 +32,7 @@ public class SimpleDAOClient implements DAOClient {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         Client clientPersistent = session.load(Client.class, clientId);
-        clientPersistent.update(updater);
+        clientPersistent.setName(updater.getName());
         session.update(clientPersistent);
         transaction.commit();
         session.close();
@@ -38,7 +40,13 @@ public class SimpleDAOClient implements DAOClient {
 
     @Override
     public Client getClientById(long clientId) {
-        return (Client) daoUtils.getById(sessionFactory, clientId, Client.class);
+        ifSessionFactoryIsNull();
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        Object client = session.get(Client.class, clientId);
+        transaction.commit();
+        session.close();
+        return (Client) client;
     }
 
     public void setSessionFactory(SessionFactory sessionFactory) {
@@ -47,5 +55,11 @@ public class SimpleDAOClient implements DAOClient {
 
     public void setDaoUtils(DAOUtils daoUtils) {
         this.daoUtils = daoUtils;
+    }
+
+    private void ifSessionFactoryIsNull() {
+        if (null == sessionFactory)
+            System.out.println(":(");
+        sessionFactory = new ClassPathXmlApplicationContext("spring/root-config.xml").getBean(SessionFactory.class);
     }
 }
