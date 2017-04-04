@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="css/popup.css">
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+
+    <script src="js/lib/angular.min.js"></script>
+    <script src="js/lib/angular-ui-router.min.js"></script>
+    <script src="js/lib/localforage.min.js"></script>
+    <script src="js/lib/ngStorage.min.js"></script>
+    <script src="js/app/app.js"></script>
+    <script src="js/popup.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+
+</head>
+<body>
+<div ng-app="dialogDemo1">
+    <div ng-controller="AppCtrl" class="md-padding" id="popupContainer" ng-cloak>
+
+        <div class="dialog-demo-content" layout="row" layout-wrap layout-margin layout-align="center">
+            <md-button class="md-primary md-raised" ng-click="showConfirm($event)" >
+                Confirm Dialog
+            </md-button>
+        </div>
+
+        <div ng-if="status" id="status">
+            <b layout="row" layout-align="center center" class="md-padding">
+                {{status}}
+            </b>
+        </div>
+    </div>
+</div>
+</body>
+</html>

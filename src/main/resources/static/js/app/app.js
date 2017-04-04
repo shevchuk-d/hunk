@@ -1,4 +1,4 @@
-var app = angular.module("ngrepeatApp", []);
+var app = angular.module('ngrepeatApp', ['dialogDemo1']);
 
 
 app.controller('customersCtrl', function($scope, $http) {
@@ -31,5 +31,7 @@ app.controller('customersCtrl', function($scope, $http) {
         });
     };
 
-});
+}
+
+);
 

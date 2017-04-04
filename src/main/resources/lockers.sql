@@ -37,7 +37,7 @@ END $fill_lockers_neighbors$;
 DO $fill_clients$
 BEGIN
   FOR i in 1..100 LOOP
-    INSERT INTO clients(name, sex) VALUES (concat('client', i), 'smth');
+    INSERT INTO clients(name, sex) VALUES (concat('client', i), 'male');
   END LOOP;
 END $fill_clients$;
 

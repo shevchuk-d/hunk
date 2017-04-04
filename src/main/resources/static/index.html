@@ -1,50 +1,57 @@
 <!DOCTYPE html>
-<html lang="en"   ng-app="ngrepeatApp">
+<html lang="en" >
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="css/app.css">
-
+    <link rel="stylesheet" href="css/popup.css">
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
     <!-- jQuery library -->
     <script src="js/lib/angular.min.js"></script>
     <script src="js/lib/angular-ui-router.min.js"></script>
     <script src="js/lib/localforage.min.js"></script>
     <script src="js/lib/ngStorage.min.js"></script>
     <script src="js/app/app.js"></script>
+    <script src="js/popup.js"></script>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
 
 </head>
-<body>
+<body ng-app="ngrepeatApp" >
 
-<div ng-controller="customersCtrl">
+<div  ng-controller="customersCtrl">
     <div class="container">
-        <div class="center-block table table-bordered">
+        <div class="table center-block">
             <div class="row">
-                <p>Search:</p>
+                <h1>Search:</h1>
             </div>
             <div class="row">
-                <div id="search_field" class="col-lg-10">
+                <div id="search_field" class="col-lg-5">
                     <form class="input-group">
                         <input type="text" ng-model="hunk_search.clientId" class="form-control" >
                         <span class="input-group-btn">
-                            <button type="button" class="btn btn-default" ng-click="getHunk(hunk_search.clientId)">Search</button>
+                            <button type="button" class="btn btn-primary" ng-click="getHunk(hunk_search.clientId)">Search</button>
                         </span>
                     </form>
                 </div>
-                <div id="search_result" class="col-lg-10">
+                <div id="search_result" class="col-lg-5">
                     <div class="table table-bordered">
                         <div class="row">
-                            <span class="col-lg-5">ID:</span>
-                            <span class="col-lg-5">{{hunk.clientId}}</span>
+                            <div class="col-lg-12">ID:</div>
+                            <div class="col-lg-12">{{hunk.clientId}}</div>
                         </div>
                         <div class="row">
-                            <span class="col-lg-5">Name:</span>
-                            <span class="col-lg-5-8">{{hunk.name}}</span>
+                            <div class="col-lg-12">Name:</div>
+                            <div class="col-lg-12">{{hunk.name}}</div>
                         </div>
                         <div class="row">
-                            <span class="col-lg-5">Sex:</span>
-                            <span class="col-lg-5">{{hunk.sex}}</span>
+                            <div class="col-lg-12">Sex:</div>
+                            <div class="col-lg-12">{{hunk.sex}}</div>
                         </div>
                     </div>
                 </div>
@@ -52,18 +59,19 @@
         </div>
 
 
-        <div class="center-block">
+        <div class="center-block table">
             <div class="row">
                 <div ng-repeat="locker in lockers">
-                    <div ng-if="locker.number % 2 == 1 && locker.number <= 50" class="col-lg-1">
+                    <div ng-if="locker.number % 2 == 1 && locker.number <= 50" class="col-lg-1"
+                         ng-click="hunk.clientId = locker.number">
                         <button ng-if="arrayContains(reservedLockers, locker)"
                                 class="btn col-lg-25 btn-danger">{{ locker.number }}</button>
                         <button ng-if="!arrayContains(reservedLockers, locker)
                                         && !arrayContains(reservedLockersNeighbors, locker)"
-                                class="btn col-lg-25">{{ locker.number }}</button>
+                                class="btn col-lg-25 btn-default">{{ locker.number }}</button>
                         <button ng-if="!arrayContains(reservedLockers, locker)
                                         && arrayContains(reservedLockersNeighbors, locker)"
-                                class="btn col-lg-25 bg-warning">{{ locker.number }}</button>
+                                class="btn col-lg-25 btn-warning">{{ locker.number }}</button>
                     </div>
                 </div>
             </div>
@@ -75,15 +83,15 @@
                                 class="btn col-lg-25 btn-danger">{{ locker.number }}</button>
                         <button ng-if="!arrayContains(reservedLockers, locker)
                                         && !arrayContains(reservedLockersNeighbors, locker)"
-                                class="btn col-lg-25">{{ locker.number }}</button>
+                                class="btn col-lg-25 btn-default">{{ locker.number }}</button>
                         <button ng-if="!arrayContains(reservedLockers, locker)
                                         && arrayContains(reservedLockersNeighbors, locker)"
-                                class="btn col-lg-25 bg-warning">{{ locker.number }}</button>
+                                class="btn col-lg-25 btn-warning">{{ locker.number }}</button>
                     </div>
                 </div>
             </div>
-                <p></p>
-                <p></p>
+            <p></p>
+            <p></p>
             <div class="row">
                 <div ng-repeat="locker in lockers">
                     <div ng-if="locker.number % 2 == 1 && locker.number > 50" class="col-lg-1">
@@ -91,10 +99,10 @@
                                 class="btn col-lg-25 btn-danger">{{ locker.number }}</button>
                         <button ng-if="!arrayContains(reservedLockers, locker)
                                         && !arrayContains(reservedLockersNeighbors, locker)"
-                                class="btn col-lg-25">{{ locker.number }}</button>
+                                class="btn col-lg-25 btn-default">{{ locker.number }}</button>
                         <button ng-if="!arrayContains(reservedLockers, locker)
                                         && arrayContains(reservedLockersNeighbors, locker)"
-                                class="btn col-lg-25 bg-warning">{{ locker.number }}</button>
+                                class="btn col-lg-25 btn-warning">{{ locker.number }}</button>
                     </div>
                 </div>
             </div>
@@ -106,16 +114,29 @@
                                 class="btn col-lg-25 btn-danger">{{ locker.number }}</button>
                         <button ng-if="!arrayContains(reservedLockers, locker)
                                         && !arrayContains(reservedLockersNeighbors, locker)"
-                                class="btn col-lg-25">{{ locker.number }}</button>
+                                class="btn col-lg-25 btn-default">{{ locker.number }}</button>
                         <button ng-if="!arrayContains(reservedLockers, locker)
                                         && arrayContains(reservedLockersNeighbors, locker)"
-                                class="btn col-lg-25 bg-warning">{{ locker.number }}</button>
+                                class="btn col-lg-25 btn-warning">{{ locker.number }}</button>
                     </div>
                 </div>
             </div>
         </div>
 
     </div>
+
+</div>
+
+<div ng-controller="AppCtrl" class="md-padding" id="popupContainer" ng-cloak>
+
+    <div class="dialog-demo-content" layout="row" layout-wrap layout-margin layout-align="center">
+        <md-button class="md-primary md-raised" ng-click="showConfirm($event)" >
+            Confirm Dialog
+        </md-button>
+    </div>
+</div>
+
+
 
 </body>
 </html>
