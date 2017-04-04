@@ -24,14 +24,13 @@ app.controller('customersCtrl', function($scope, $http) {
         "sex": ""
     };
 
-
     $scope.getHunk = function(id) {
         $http.get("http://localhost:8080/hunk/client/" + id).then(function(response) {
             $scope.hunk = response.data;
         });
     };
 
-}
 
-);
+
+});
 

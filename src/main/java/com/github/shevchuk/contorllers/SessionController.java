@@ -2,15 +2,16 @@ package com.github.shevchuk.contorllers;
 
 import com.github.shevchuk.clients.client.dao.DAOClient;
 import com.github.shevchuk.clients.client.model.Client;
+import com.github.shevchuk.clients.visit.dao.DAOVisit;
+import com.github.shevchuk.clients.visit.dto.VisitDTO;
+import com.github.shevchuk.clients.visit.model.Visit;
+import com.github.shevchuk.clients.visit.service.VisitService;
 import com.github.shevchuk.locker.dao.DAOLocker;
 import com.github.shevchuk.locker.model.Locker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -27,6 +28,12 @@ public class SessionController {
     @Autowired
     private DAOClient daoClient;
 
+    @Autowired
+    @Qualifier("simpleDAOVisit")
+    private DAOVisit daoVisit;
+
+    @Autowired
+    private VisitService visitService;
 
     @RequestMapping(value = "/lockers/reserved", method = RequestMethod.GET)
     @Produces(MediaType.APPLICATION_JSON)
@@ -59,11 +66,26 @@ public class SessionController {
         return daoClient.getClientById(id);
     }
 
+    @RequestMapping(value = "/visit/", method = RequestMethod.POST)
+    public void newVisit(@RequestBody VisitDTO visitDTO){
+        Visit visit = visitService.visitFromDTO(visitDTO);
+        daoVisit.addVisit(visit);
+    }
+
+
     public void setLockerDAO(DAOLocker daoLocker) {
         this.daoLocker = daoLocker;
     }
 
     public void setDaoClient(DAOClient daoClient) {
         this.daoClient = daoClient;
+    }
+
+    public VisitService getVisitService() {
+        return visitService;
+    }
+
+    public void setVisitService(VisitService visitService) {
+        this.visitService = visitService;
     }
 }

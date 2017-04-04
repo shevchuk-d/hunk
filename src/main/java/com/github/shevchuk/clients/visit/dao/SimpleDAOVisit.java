@@ -6,15 +6,22 @@ import com.github.shevchuk.utils.DAOUtils;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Component;
 
-
+@Component
 public class SimpleDAOVisit implements DAOVisit{
     private SessionFactory sessionFactory;
     private DAOUtils daoUtils;
 
     @Override
     public void addVisit(Visit visit) {
-        daoUtils.add(sessionFactory, visit);
+        ifSessionFactoryIsNull();
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        session.save(visit);
+        transaction.commit();
+        session.close();
     }
 
     public void deleteVisit(long visitId) {
@@ -37,6 +44,12 @@ public class SimpleDAOVisit implements DAOVisit{
     @Override
     public Visit getVisitById(long visitId) {
         return (Visit) daoUtils.getById(sessionFactory, visitId, Visit.class);
+    }
+
+    private void ifSessionFactoryIsNull() {
+        if (null == sessionFactory)
+            System.out.println(":(");
+        sessionFactory = new ClassPathXmlApplicationContext("spring/root-config.xml").getBean(SessionFactory.class);
     }
 
     public void setSessionFactory(SessionFactory sessionFactory) {

@@ -1,99 +1,55 @@
 angular.module('dialogDemo1', ['ngMaterial'])
 
-    .controller('AppCtrl', function($scope, $mdDialog) {
+    .controller('AppCtrl', function($scope, $http, $mdDialog) {
         $scope.status = '  ';
         $scope.customFullscreen = false;
 
-        $scope.showAlert = function(ev) {
-            // Appending dialog to document.body to cover sidenav in docs app
-            // Modal dialogs should fully cover application
-            // to prevent interaction outside of dialog
-            $mdDialog.show(
-                $mdDialog.alert()
-                    .parent(angular.element(document.querySelector('#popupContainer')))
-                    .clickOutsideToClose(true)
-                    .title('This is an alert title')
-                    .textContent('You can specify some description text in here.')
-                    .ariaLabel('Alert Dialog Demo')
-                    .ok('Got it!')
-                    .targetEvent(ev)
-            );
-        };
-
-        $scope.showConfirm = function(ev) {
+        $scope.showConfirm = function(ev, locker, hunk, reserved) {
             // Appending dialog to document.body to cover sidenav in docs app
             var confirm = $mdDialog.confirm()
-                .title('Would you like to delete your debt?')
-                .textContent('All of the banks have agreed to forgive you your debts.')
-                .ariaLabel('Lucky day')
+                .title('Would you like to assign this locker for ' + hunk.name + '?')
+                .textContent('_TIME_')
+                .ariaLabel('Assignment')
                 .targetEvent(ev)
-                .ok('Please do it!')
-                .cancel('Sounds like a scam');
+                .ok('Assign')
+                .cancel('Chose another');
 
             $mdDialog.show(confirm).then(function() {
-                $scope.status = 'You decided to get rid of your debt.';
+                if (!reserved) $scope.addVisit(hunk, locker);
+                if (reserved) $scope.finishVisit(hunk, locker);
             }, function() {
-                $scope.status = 'You decided to keep your debt.';
+                $scope.status = 'Chose another';
             });
         };
 
-        $scope.showPrompt = function(ev) {
-            // Appending dialog to document.body to cover sidenav in docs app
-            var confirm = $mdDialog.prompt()
-                .title('What would you name your dog?')
-                .textContent('Bowser is a common name.')
-                .placeholder('Dog name')
-                .ariaLabel('Dog name')
-                .initialValue('Buddy')
-                .targetEvent(ev)
-                .ok('Okay!')
-                .cancel('I\'m a cat person');
-
-            $mdDialog.show(confirm).then(function(result) {
-                $scope.status = 'You decided to name your dog ' + result + '.';
-            }, function() {
-                $scope.status = 'You didn\'t name your dog.';
+        $scope.addVisit = function(hunk, locker) {
+            var newVisit = JSON.stringify({
+                "start": new Date(),
+                "locker": locker.lockerId,
+                "client": hunk.clientId
             });
-        };
 
-        $scope.showAdvanced = function(ev) {
-            $mdDialog.show({
-                controller: DialogController,
-                templateUrl: 'dialog1.tmpl.html',
-                parent: angular.element(document.body),
-                targetEvent: ev,
-                clickOutsideToClose:true,
-                fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
+            $http.post("http://localhost:8080/hunk/visit/", newVisit).
+            success(function(data, status, headers, config) {
+                console.log(status);
+            }).
+            error(function(data, status, headers, config) {
             })
-                .then(function(answer) {
-                    $scope.status = 'You said the information was "' + answer + '".';
-                }, function() {
-                    $scope.status = 'You cancelled the dialog.';
-                });
         };
 
-        $scope.showTabDialog = function(ev) {
-            $mdDialog.show({
-                controller: DialogController,
-                templateUrl: 'tabDialog.tmpl.html',
-                parent: angular.element(document.body),
-                targetEvent: ev,
-                clickOutsideToClose:true
-            })
-                .then(function(answer) {
-                    $scope.status = 'You said the information was "' + answer + '".';
-                }, function() {
-                    $scope.status = 'You cancelled the dialog.';
-                });
-        };
-
-        $scope.showPrerenderedDialog = function(ev) {
-            $mdDialog.show({
-                contentElement: '#myDialog',
-                parent: angular.element(document.body),
-                targetEvent: ev,
-                clickOutsideToClose: true
+        $scope.finishVisit = function(hunk, locker) {
+            var newVisit = JSON.stringify({
+                "start": new Date(),
+                "locker": locker.lockerId,
+                "client": hunk.clientId
             });
+
+            $http.post("http://localhost:8080/hunk/visit/", newVisit).
+            success(function(data, status, headers, config) {
+                console.log(status);
+            }).
+            error(function(data, status, headers, config) {
+            })
         };
 
         function DialogController($scope, $mdDialog) {
@@ -108,5 +64,6 @@ angular.module('dialogDemo1', ['ngMaterial'])
             $scope.answer = function(answer) {
                 $mdDialog.hide(answer);
             };
-        }
+        };
+
     });

@@ -35,7 +35,8 @@
                     <form class="input-group">
                         <input type="text" ng-model="hunk_search.clientId" class="form-control" >
                         <span class="input-group-btn">
-                            <button type="button" class="btn btn-primary" ng-click="getHunk(hunk_search.clientId)">Search</button>
+                            <button type="button" class="btn btn-primary" ng-click="getHunk(hunk_search.clientId)">
+                                Search</button>
                         </span>
                     </form>
                 </div>
@@ -59,13 +60,14 @@
         </div>
 
 
-        <div class="center-block table">
+        <div ng-controller="AppCtrl" id="popupContainer" ng-cloak
+                class="center-block table">
             <div class="row">
                 <div ng-repeat="locker in lockers">
                     <div ng-if="locker.number % 2 == 1 && locker.number <= 50" class="col-lg-1"
-                         ng-click="hunk.clientId = locker.number">
+                         ng-click="showConfirm($event, locker, hunk, arrayContains(reservedLockers, locker) )">
                         <button ng-if="arrayContains(reservedLockers, locker)"
-                                class="btn col-lg-25 btn-danger">{{ locker.number }}</button>
+                                class="btn btn-danger col-lg-25">{{ locker.number }}</button>
                         <button ng-if="!arrayContains(reservedLockers, locker)
                                         && !arrayContains(reservedLockersNeighbors, locker)"
                                 class="btn col-lg-25 btn-default">{{ locker.number }}</button>
@@ -111,31 +113,22 @@
                 <div ng-repeat="locker in lockers">
                     <div ng-if="locker.number % 2 == 0 && locker.number > 50" class="col-lg-1">
                         <button ng-if="arrayContains(reservedLockers, locker)"
-                                class="btn col-lg-25 btn-danger">{{ locker.number }}</button>
+                                class="btn col-lg-25 btn-danger"
+                                ng-click="showConfirm($event)">{{ locker.number }}</button>
                         <button ng-if="!arrayContains(reservedLockers, locker)
                                         && !arrayContains(reservedLockersNeighbors, locker)"
-                                class="btn col-lg-25 btn-default">{{ locker.number }}</button>
+                                class="btn col-lg-25 btn-default"
+                                ng-click="showConfirm($event)">{{ locker.number }}</button>
                         <button ng-if="!arrayContains(reservedLockers, locker)
                                         && arrayContains(reservedLockersNeighbors, locker)"
-                                class="btn col-lg-25 btn-warning">{{ locker.number }}</button>
+                                class="btn col-lg-25 btn-warning"
+                                ng-click="showConfirm($event)">{{ locker.number }}</button>
                     </div>
                 </div>
             </div>
         </div>
-
-    </div>
-
-</div>
-
-<div ng-controller="AppCtrl" class="md-padding" id="popupContainer" ng-cloak>
-
-    <div class="dialog-demo-content" layout="row" layout-wrap layout-margin layout-align="center">
-        <md-button class="md-primary md-raised" ng-click="showConfirm($event)" >
-            Confirm Dialog
-        </md-button>
     </div>
 </div>
-
 
 
 </body>
