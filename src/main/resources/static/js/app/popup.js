@@ -44,10 +44,13 @@ angular.module('dialogDemo1', ['ngMaterial'])
             //     "client": hunk.clientId
             // });
 
-            var visit = $http.get("http://localhost:8080/hunk/" + locker.lockerId + "/visit/active").then(function (response) {
+            var visit = $http.get("http://localhost:8080/hunk/" + locker.lockerId + "/visit/active").then(
+                function (response) {
                 console.log(JSON.stringify(response.data));
                 return response.data;
-            });
+            }
+
+            );
 
             console.log(JSON.stringify(visit));
             visit.finish = new Date();
@@ -59,7 +62,11 @@ angular.module('dialogDemo1', ['ngMaterial'])
             error(function(data, status, headers, config) {
             });
             console.log(JSON.stringify(visit));
-
+            $http.put("http://localhost:8080/hunk/visit/" + visit.visitId, visit).
+            success(function(data, status) {
+            }).
+            error(function(data, status, headers, config) {
+            });
         };
 
         function DialogController($scope, $mdDialog) {
