@@ -3,11 +3,15 @@ package com.github.shevchuk.clients.visit.dao;
 import com.github.shevchuk.clients.visit.model.Visit;
 import com.github.shevchuk.utils.DAOUtils;
 
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
+
+import java.math.BigInteger;
+import java.util.Date;
 
 @Component
 public class SimpleDAOVisit implements DAOVisit{
@@ -33,6 +37,7 @@ public class SimpleDAOVisit implements DAOVisit{
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         Visit clientPersistent = session.load(Visit.class, visitId);
+        transaction.commit();
         clientPersistent.setClient(updater.getClient());
         clientPersistent.setFinish(updater.getFinish());
         clientPersistent.setStart(updater.getStart());
@@ -44,6 +49,21 @@ public class SimpleDAOVisit implements DAOVisit{
     @Override
     public Visit getVisitById(long visitId) {
         return (Visit) daoUtils.getById(sessionFactory, visitId, Visit.class);
+    }
+
+    @Override
+    public Visit findActiveVisitForLocker(long id) {
+        ifSessionFactoryIsNull();
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        Query getVisit = session.createQuery
+                ("from Visit v where v.locker.id = :id and v.finish is null")
+                .setBigInteger("id", BigInteger.valueOf(id));
+        Visit visit = (Visit) getVisit.uniqueResult();
+        System.out.println(visit.toString());
+        transaction.commit();
+        if (session.isOpen()) session.close();
+        return visit;
     }
 
     private void ifSessionFactoryIsNull() {

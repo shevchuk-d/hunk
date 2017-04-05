@@ -1,5 +1,6 @@
 package com.github.shevchuk.clients.visit.dto;
 
+import com.github.shevchuk.clients.visit.model.Visit;
 import com.github.shevchuk.locker.model.Locker;
 
 import java.util.Date;
@@ -15,6 +16,19 @@ public class VisitDTO {
     private long locker;
 
     private long client;
+
+    public VisitDTO(){}
+
+    public VisitDTO(Visit visit){
+        visitId = visit.getVisitId();
+        start = visit.getStart();
+        finish = visit.getFinish();
+        locker = visit.getLocker().getLockerId();
+        client = visit.getClient().getClientId();
+
+    }
+
+
 
     public long getVisitId() {
         return visitId;

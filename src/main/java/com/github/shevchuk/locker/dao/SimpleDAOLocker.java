@@ -118,10 +118,10 @@ public class SimpleDAOLocker implements DAOLocker {
     private Date getAverageVisitTime(){
         ifSessionFactoryIsNull();
         Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
         Query getAverageVisitTime = session.createQuery
                 ("select avg(v.finish - v.start) from Visit v group by v.client");
         Date averageVisitTime = (Date) getAverageVisitTime.uniqueResult();
-        Transaction transaction = session.beginTransaction();
         transaction.commit();
         if (session.isOpen()) session.close();
         return averageVisitTime;

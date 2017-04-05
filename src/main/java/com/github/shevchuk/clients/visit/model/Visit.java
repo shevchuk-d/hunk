@@ -1,5 +1,6 @@
 package com.github.shevchuk.clients.visit.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.shevchuk.clients.client.model.Client;
 import com.github.shevchuk.locker.model.Locker;
 import com.sun.deploy.util.SessionState;
@@ -23,14 +24,23 @@ public class Visit {
 //    @Column(name = "locker_id")
 //    private int lockerId;
 
+
     @OneToOne
     @JoinColumn(name = "locker_id")
     private Locker locker;
+
 
     @ManyToOne
     @JoinColumn(name = "client_id")
     private Client client;
 
+    @Override
+    public String toString() {
+        return "ID: " + visitId +
+                "Started: " + start +
+                "Finished: " +  ( null == finish ? "Not yet" : finish ) +
+                "Client " + client.getName();
+    }
 
     public long getVisitId() {
         return visitId;

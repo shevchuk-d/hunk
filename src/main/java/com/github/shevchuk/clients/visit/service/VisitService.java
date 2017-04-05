@@ -23,7 +23,6 @@ public class VisitService {
     @Qualifier("simpleDAOVisit")
     private DAOVisit daoVisit;
 
-
     public Visit visitFromDTO(VisitDTO visitDTO){
         Visit visit = new Visit();
         visit.setLocker(daoLocker.getLockerById(visitDTO.getLocker()));

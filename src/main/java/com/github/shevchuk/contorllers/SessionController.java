@@ -72,6 +72,20 @@ public class SessionController {
         daoVisit.addVisit(visit);
     }
 
+    @RequestMapping(value = "/visit/{id}", method = RequestMethod.PUT)
+    public void finishVisit(@RequestBody VisitDTO visitDTO, @PathVariable("id")long id){
+        Visit visit = visitService.visitFromDTO(visitDTO);
+        System.out.println("ID::" + id );
+        daoVisit.updateVisit(id, visit);
+    }
+
+    @RequestMapping(value = "/{id}/visit/active", method = RequestMethod.GET)
+    @Produces(MediaType.APPLICATION_JSON)
+    public VisitDTO findActiveVisitForHunk(@PathVariable("id") long id){
+        VisitDTO v = new VisitDTO(daoVisit.findActiveVisitForLocker(id));
+        System.out.println(v);
+        return v;
+    }
 
     public void setLockerDAO(DAOLocker daoLocker) {
         this.daoLocker = daoLocker;

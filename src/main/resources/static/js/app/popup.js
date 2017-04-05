@@ -11,12 +11,12 @@ angular.module('dialogDemo1', ['ngMaterial'])
                 .textContent('_TIME_')
                 .ariaLabel('Assignment')
                 .targetEvent(ev)
-                .ok('Assign')
+                .ok(!reserved ? 'Assign' : 'Finish')
                 .cancel('Chose another');
 
             $mdDialog.show(confirm).then(function() {
                 if (!reserved) $scope.addVisit(hunk, locker);
-                if (reserved) $scope.finishVisit(hunk, locker);
+                if (reserved) $scope.finishVisit(locker);
             }, function() {
                 $scope.status = 'Chose another';
             });
@@ -37,19 +37,29 @@ angular.module('dialogDemo1', ['ngMaterial'])
             })
         };
 
-        $scope.finishVisit = function(hunk, locker) {
-            var newVisit = JSON.stringify({
-                "start": new Date(),
-                "locker": locker.lockerId,
-                "client": hunk.clientId
+        $scope.finishVisit = function(locker) {
+            // var newVisit = JSON.stringify({
+            //     "finish": new Date(),
+            //     "locker": locker.lockerId,
+            //     "client": hunk.clientId
+            // });
+
+            var visit = $http.get("http://localhost:8080/hunk/" + locker.lockerId + "/visit/active").then(function (response) {
+                console.log(JSON.stringify(response.data));
+                return response.data;
             });
 
-            $http.post("http://localhost:8080/hunk/visit/", newVisit).
-            success(function(data, status, headers, config) {
-                console.log(status);
+            console.log(JSON.stringify(visit));
+            visit.finish = new Date();
+            console.log(JSON.stringify(visit));
+
+            $http.put("http://localhost:8080/hunk/visit/" + visit.visitId, visit).
+            success(function(data, status) {
             }).
             error(function(data, status, headers, config) {
-            })
+            });
+            console.log(JSON.stringify(visit));
+
         };
 
         function DialogController($scope, $mdDialog) {
@@ -64,6 +74,6 @@ angular.module('dialogDemo1', ['ngMaterial'])
             $scope.answer = function(answer) {
                 $mdDialog.hide(answer);
             };
-        };
+        }
 
     });

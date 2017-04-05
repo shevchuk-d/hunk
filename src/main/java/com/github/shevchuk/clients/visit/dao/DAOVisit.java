@@ -12,4 +12,6 @@ public interface DAOVisit {
     void updateVisit(long visitId, Visit updater);
 
     Visit getVisitById(long visitId);
+
+    Visit findActiveVisitForLocker(long id);
 }
