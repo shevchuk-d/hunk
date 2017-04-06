@@ -1,4 +1,4 @@
-var app = angular.module('ngrepeatApp', ['dialogDemo1']);
+var app = angular.module('ngrepeatApp', ['dialogDemo1', 'progressCircularDemo1']);
 
 
 app.controller('customersCtrl', function($scope, $http) {
@@ -34,7 +34,12 @@ app.controller('customersCtrl', function($scope, $http) {
         $http.get("http://localhost:8080/hunk/lockers/reserved").then(function(response) {
             $scope.reservedLockers = response.data;
         });
-    }
+    };
+
+    $scope.isHidden = function getElementByXpath(path) {
+        return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.offsetParent === null;
+    };
+
 
 });
 

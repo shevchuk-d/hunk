@@ -76,6 +76,7 @@ public class SessionController {
 
     @RequestMapping(value = "/visit/{id}", method = RequestMethod.PUT)
     public void finishVisit(@RequestBody VisitDTO visitDTO, @PathVariable("id")long id){
+        System.out.println(visitDTO.toString() );
         Visit visit = visitService.visitFromDTO(visitDTO);
         System.out.println(visit.toString() );
         daoVisit.updateVisit(id, visit);

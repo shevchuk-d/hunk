@@ -139,15 +139,6 @@ WHERE locker_id in (
 
 select
 * from visits
-where locker_id = 43
+where locker_id = 1
 -- and finish ISNULL
 ;
-
-select visit0_.visit_id as visit_id1_3_
-  , visit0_.client_id as client_i4_3_
-  , visit0_.finish as finish2_3_
-  , visit0_.locker_id as locker_i5_3_
-  , visit0_.start as start3_3_
-from visits visit0_
-where visit0_.locker_id=visit0_.visit_id
-      and (visit0_.finish is null)

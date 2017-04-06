@@ -39,7 +39,8 @@ public class Visit {
         return "ID: " + visitId +
                 "\nStarted: " + start +
                 "\nFinished: " +  ( null == finish ? "Not yet" : finish ) +
-                "\nClient " + client.getName();
+                "\nLocker " + (null == locker ? null : locker.getNumber())+
+                "\nClient " + (null == locker ? null : client.getName());
     }
 
     public long getVisitId() {

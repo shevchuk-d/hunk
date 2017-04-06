@@ -25,10 +25,16 @@ public class VisitDTO {
         finish = visit.getFinish();
         locker = visit.getLocker().getLockerId();
         client = visit.getClient().getClientId();
-
     }
 
-
+    @Override
+    public String toString() {
+        return "ID: " + visitId +
+                "\nStarted: " + start +
+                "\nFinished: " +  ( null == finish ? "Not yet" : finish ) +
+                "\nLocker " + locker +
+                "\nClient " + client;
+    }
 
     public long getVisitId() {
         return visitId;

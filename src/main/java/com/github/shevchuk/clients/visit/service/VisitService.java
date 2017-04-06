@@ -25,8 +25,8 @@ public class VisitService {
 
     public Visit visitFromDTO(VisitDTO visitDTO){
         Visit visit = new Visit();
-        visit.setLocker(daoLocker.getLockerById(visitDTO.getLocker()));
-        visit.setClient(daoClient.getClientById(visitDTO.getClient()));
+        visit.setLocker(visitDTO.getLocker() == 0 ? null : daoLocker.getLockerById(visitDTO.getLocker()));
+        visit.setClient(visitDTO.getClient() == 0 ? null : daoClient.getClientById(visitDTO.getClient()));
         visit.setStart(visitDTO.getStart());
         visit.setFinish(visitDTO.getFinish());
         return visit;
