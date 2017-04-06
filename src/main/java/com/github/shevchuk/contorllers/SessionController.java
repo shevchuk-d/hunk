@@ -57,11 +57,13 @@ public class SessionController {
     }
 
     @RequestMapping(value = "/lockers/all", method = RequestMethod.GET)
+    @Produces(MediaType.APPLICATION_JSON)
     public List<Locker> getAllLockers(){
         return daoLocker.getLockers();
     }
 
     @RequestMapping(value = "/client/{id}", method = RequestMethod.GET)
+    @Produces(MediaType.APPLICATION_JSON)
     public Client getClientById(@PathVariable("id") long id){
         return daoClient.getClientById(id);
     }
@@ -75,7 +77,7 @@ public class SessionController {
     @RequestMapping(value = "/visit/{id}", method = RequestMethod.PUT)
     public void finishVisit(@RequestBody VisitDTO visitDTO, @PathVariable("id")long id){
         Visit visit = visitService.visitFromDTO(visitDTO);
-        System.out.println("ID::" + id );
+        System.out.println(visit.toString() );
         daoVisit.updateVisit(id, visit);
     }
 

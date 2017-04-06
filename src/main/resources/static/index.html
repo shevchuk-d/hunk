@@ -56,6 +56,10 @@
                         </div>
                     </div>
                 </div>
+                <!--<div id="refresh" class="col-lg-5">-->
+                    <!--<button type="button" class="btn btn-info" ng-click="refreshLockers()">-->
+                        <!--Refresh</button>-->
+                <!--</div>-->
             </div>
         </div>
 
@@ -80,7 +84,8 @@
 
             <div class="row">
                 <div ng-repeat="locker in lockers">
-                    <div ng-if="locker.number % 2 == 0 && locker.number <= 50" class="col-lg-1">
+                    <div ng-if="locker.number % 2 == 0 && locker.number <= 50" class="col-lg-1"
+                         ng-click="showConfirm($event, locker, hunk, arrayContains(reservedLockers, locker) )">
                         <button ng-if="arrayContains(reservedLockers, locker)"
                                 class="btn col-lg-25 btn-danger">{{ locker.number }}</button>
                         <button ng-if="!arrayContains(reservedLockers, locker)
@@ -96,7 +101,8 @@
             <p></p>
             <div class="row">
                 <div ng-repeat="locker in lockers">
-                    <div ng-if="locker.number % 2 == 1 && locker.number > 50" class="col-lg-1">
+                    <div ng-if="locker.number % 2 == 1 && locker.number > 50" class="col-lg-1"
+                         ng-click="showConfirm($event, locker, hunk, arrayContains(reservedLockers, locker) )">
                         <button ng-if="arrayContains(reservedLockers, locker)"
                                 class="btn col-lg-25 btn-danger">{{ locker.number }}</button>
                         <button ng-if="!arrayContains(reservedLockers, locker)
@@ -111,7 +117,8 @@
 
             <div class="row">
                 <div ng-repeat="locker in lockers">
-                    <div ng-if="locker.number % 2 == 0 && locker.number > 50" class="col-lg-1">
+                    <div ng-if="locker.number % 2 == 0 && locker.number > 50" class="col-lg-1"
+                         ng-click="showConfirm($event, locker, hunk, arrayContains(reservedLockers, locker) )">
                         <button ng-if="arrayContains(reservedLockers, locker)"
                                 class="btn col-lg-25 btn-danger"
                                 ng-click="showConfirm($event)">{{ locker.number }}</button>

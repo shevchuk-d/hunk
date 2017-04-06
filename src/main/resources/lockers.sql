@@ -128,19 +128,19 @@ WHERE locker_id in (
              BETWEEN
              v.start
              AND
-             v.start + INTERVAL '15 minutes'
+             v.start + INTERVAL '2 minutes'
              or current_timestamp >=
                 v.start + (SELECT avg(finish - start)
                            FROM visits
                            WHERE visits.client_id = c.client_id
-                )::INTERVAL - INTERVAL '15 minutes')
+                )::INTERVAL - INTERVAL '2 minutes')
 )
 ;
 
 select
 * from visits
-where locker_id = 1
-and finish ISNULL
+where locker_id = 43
+-- and finish ISNULL
 ;
 
 select visit0_.visit_id as visit_id1_3_

@@ -19,7 +19,7 @@ app.controller('customersCtrl', function($scope, $http) {
     };
 
     $scope.hunk = {
-        "clientId": 0,
+        "clientId": "",
         "name": "",
         "sex": ""
     };
@@ -30,7 +30,11 @@ app.controller('customersCtrl', function($scope, $http) {
         });
     };
 
-
+    $scope.refreshLockers = function () {
+        $http.get("http://localhost:8080/hunk/lockers/reserved").then(function(response) {
+            $scope.reservedLockers = response.data;
+        });
+    }
 
 });
 

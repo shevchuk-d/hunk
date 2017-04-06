@@ -36,13 +36,17 @@ public class SimpleDAOVisit implements DAOVisit{
     public void updateVisit(long visitId, Visit updater) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
-        Visit clientPersistent = session.load(Visit.class, visitId);
+        Visit visit = session.load(Visit.class, visitId);
+        System.out.println(visit.toString() );
         transaction.commit();
-        clientPersistent.setClient(updater.getClient());
-        clientPersistent.setFinish(updater.getFinish());
-        clientPersistent.setStart(updater.getStart());
-        session.update(clientPersistent);
+        transaction = session.beginTransaction();
+        visit.setClient(updater.getClient());
+        visit.setLocker(updater.getLocker());
+        visit.setFinish(updater.getFinish());
+        visit.setStart(updater.getStart());
+        session.update(visit);
         transaction.commit();
+        System.out.println(visit.toString() );
         session.close();
     }
 

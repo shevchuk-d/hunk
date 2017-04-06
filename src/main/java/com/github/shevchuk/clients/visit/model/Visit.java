@@ -37,9 +37,9 @@ public class Visit {
     @Override
     public String toString() {
         return "ID: " + visitId +
-                "Started: " + start +
-                "Finished: " +  ( null == finish ? "Not yet" : finish ) +
-                "Client " + client.getName();
+                "\nStarted: " + start +
+                "\nFinished: " +  ( null == finish ? "Not yet" : finish ) +
+                "\nClient " + client.getName();
     }
 
     public long getVisitId() {

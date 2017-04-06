@@ -1,6 +1,6 @@
-angular.module('dialogDemo1', ['ngMaterial'])
+var app = angular.module('dialogDemo1', ['ngMaterial']);
 
-    .controller('AppCtrl', function($scope, $http, $mdDialog) {
+app.controller('AppCtrl', function($scope, $http, $mdDialog) {
         $scope.status = '  ';
         $scope.customFullscreen = false;
 
@@ -11,7 +11,7 @@ angular.module('dialogDemo1', ['ngMaterial'])
                 .textContent('_TIME_')
                 .ariaLabel('Assignment')
                 .targetEvent(ev)
-                .ok(!reserved ? 'Assign' : 'Finish')
+                .ok(reserved ? 'Finish' : 'Assign')
                 .cancel('Chose another');
 
             $mdDialog.show(confirm).then(function() {
@@ -28,44 +28,22 @@ angular.module('dialogDemo1', ['ngMaterial'])
                 "locker": locker.lockerId,
                 "client": hunk.clientId
             });
-
-            $http.post("http://localhost:8080/hunk/visit/", newVisit).
-            success(function(data, status, headers, config) {
-                console.log(status);
-            }).
-            error(function(data, status, headers, config) {
-            })
+            $http.post("http://localhost:8080/hunk/visit/", newVisit);
         };
 
         $scope.finishVisit = function(locker) {
-            // var newVisit = JSON.stringify({
-            //     "finish": new Date(),
-            //     "locker": locker.lockerId,
-            //     "client": hunk.clientId
-            // });
-
-            var visit = $http.get("http://localhost:8080/hunk/" + locker.lockerId + "/visit/active").then(
+            var visit = {};
+            $http.get("http://localhost:8080/hunk/" + locker.lockerId + "/visit/active").then(
                 function (response) {
-                console.log(JSON.stringify(response.data));
-                return response.data;
-            }
-
-            );
-
-            console.log(JSON.stringify(visit));
-            visit.finish = new Date();
-            console.log(JSON.stringify(visit));
-
-            $http.put("http://localhost:8080/hunk/visit/" + visit.visitId, visit).
-            success(function(data, status) {
-            }).
-            error(function(data, status, headers, config) {
-            });
-            console.log(JSON.stringify(visit));
-            $http.put("http://localhost:8080/hunk/visit/" + visit.visitId, visit).
-            success(function(data, status) {
-            }).
-            error(function(data, status, headers, config) {
+                    visit = response.data;
+                    visit.finish = new Date();
+                    visit.locker = null;
+                    return visit;
+            }).then(function(visit){
+                $http.put("http://localhost:8080/hunk/visit/" + visit.visitId, visit).
+                success(function(data, status) {
+                    console.log(":)");
+                });
             });
         };
 
