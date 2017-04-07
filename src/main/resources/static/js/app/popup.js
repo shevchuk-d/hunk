@@ -5,17 +5,17 @@ app.controller('AppCtrl', function($scope, $http, $mdDialog) {
         $scope.customFullscreen = false;
 
         $scope.showConfirm = function(ev, locker, reserved) {
-            $scope.confirm = getPopupContent(locker, reserved, ev);
+            $scope.hunkForCurrentLocker = getPopupContent(locker);
 
             console.log('6. ' + JSON.stringify($scope.hunkForCurrentLocker));
 
-            // $scope.confirm = $mdDialog.confirm()
-            //     .title(getTitle(locker, reserved) )
-            //     .textContent($scope.hunkForCurrentLocker)
-            //     .ariaLabel('Assignment')
-            //     .targetEvent(ev)
-            //     .ok(reserved ? 'Finish' : 'Assign')
-            //     .cancel('Chose another');
+            $scope.confirm = $mdDialog.confirm()
+                .title(getTitle(locker, reserved) )
+                .textContent($scope.hunkForCurrentLocker)
+                .ariaLabel('Assignment')
+                .targetEvent(ev)
+                .ok(reserved ? 'Finish' : 'Assign')
+                .cancel('Chose another');
 
             $mdDialog.show($scope.confirm).then(function() {
                 if (!reserved) $scope.addVisit(hunk, locker);
@@ -45,7 +45,7 @@ app.controller('AppCtrl', function($scope, $http, $mdDialog) {
                     });
             });
         }
-        function getPopupContent(locker, reserved, ev) {
+        function getPopupContent(locker) {
                 $http.get("http://localhost:8080/hunk/" + locker.lockerId + "/visit/active")
                     .then(function (response) {
                         $scope.visitForCurrentLocker = response.data;
@@ -59,14 +59,9 @@ app.controller('AppCtrl', function($scope, $http, $mdDialog) {
                                 return response.data;
                             })
                             .then(function (data) {
-                                var confirm = $mdDialog.confirm()
-                                    .title(getTitle(locker, reserved) )
-                                    .textContent($scope.hunkForCurrentLocker)
-                                    .ariaLabel('Assignment')
-                                    .targetEvent(ev)
-                                    .ok(reserved ? 'Finish' : 'Assign')
-                                    .cancel('Chose another');
-                                return confirm;
+                                $scope.hunkForCurrentLocker = data;
+                                console.log('3. ' + JSON.stringify(data));
+                                return data;
                         });
                     });
                 //     .then(function (data) {
