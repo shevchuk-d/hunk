@@ -4,19 +4,20 @@ app.controller('AppCtrl', function($scope, $http, $mdDialog) {
         $scope.status = '  ';
         $scope.customFullscreen = false;
 
-        $scope.showConfirm = function(ev, locker, hunk, reserved) {
-            var title = getTitle(locker, reserved);
-            var msg = getPopupContent(locker);
-            // Appending dialog to document.body to cover sidenav in docs app
-            var confirm = $mdDialog.confirm()
-                .title(title)
-                .textContent(msg)
-                .ariaLabel('Assignment')
-                .targetEvent(ev)
-                .ok(reserved ? 'Finish' : 'Assign')
-                .cancel('Chose another');
+        $scope.showConfirm = function(ev, locker, reserved) {
+            $scope.confirm = getPopupContent(locker, reserved, ev);
 
-            $mdDialog.show(confirm).then(function() {
+            console.log('6. ' + JSON.stringify($scope.hunkForCurrentLocker));
+
+            // $scope.confirm = $mdDialog.confirm()
+            //     .title(getTitle(locker, reserved) )
+            //     .textContent($scope.hunkForCurrentLocker)
+            //     .ariaLabel('Assignment')
+            //     .targetEvent(ev)
+            //     .ok(reserved ? 'Finish' : 'Assign')
+            //     .cancel('Chose another');
+
+            $mdDialog.show($scope.confirm).then(function() {
                 if (!reserved) $scope.addVisit(hunk, locker);
                 if (reserved) $scope.finishVisit(locker);
             }, function() {
@@ -34,43 +35,45 @@ app.controller('AppCtrl', function($scope, $http, $mdDialog) {
         };
         
         function getTitle(locker, reserved) {
-            var visitZ = {};
-            var hunk = {};
-            var msg = "Oops";
             $http.get("http://localhost:8080/hunk/" + locker.lockerId + "/visit/active").then(
                 function (response) {
-                    visitZ = response.data;
-                    return visitZ;
+                    $scope.visitZ = response.data;
+                    return response.data;
                 }).then(function(visitZ){
                     $http.get("http://localhost:8080/hunk/client/" + visitZ.client).then(function(response) {
-                        console.log(JSON.stringify(hunk));
-                        msg = reserved
-                            ? 'Would you like to finish visit for ' + hunk.name + '?'
-                            : 'Would you like to assign this locker for ' + hunk.name + '?';
+
                     });
             });
-            return msg
         }
-
-        function getPopupContent(locker) {
-            var visitZ = {};
-            var hunk = {};
-            $http.get("http://localhost:8080/hunk/" + locker.lockerId + "/visit/active").then(
-                function (response) {
-                    visitZ = response.data;
-                    return visitZ;
-                }).then(function(visit){
-                    visitZ = visit;
-                    $http.get("http://localhost:8080/hunk/client/" + visitZ.client).then(function(response) {
-                        hunk = response.data;
+        function getPopupContent(locker, reserved, ev) {
+                $http.get("http://localhost:8080/hunk/" + locker.lockerId + "/visit/active")
+                    .then(function (response) {
+                        $scope.visitForCurrentLocker = response.data;
+                        console.log('1. ' + JSON.stringify($scope.visitForCurrentLocker));
+                        return response.data;
+                    }).then(function(visit){
+                        $http.get("http://localhost:8080/hunk/client/" + visit.client)
+                            .then(function(response) {
+                                $scope.hunkForCurrentLocker = response.data;
+                                console.log('2. ' + JSON.stringify($scope.hunkForCurrentLocker));
+                                return response.data;
+                            })
+                            .then(function (data) {
+                                var confirm = $mdDialog.confirm()
+                                    .title(getTitle(locker, reserved) )
+                                    .textContent($scope.hunkForCurrentLocker)
+                                    .ariaLabel('Assignment')
+                                    .targetEvent(ev)
+                                    .ok(reserved ? 'Finish' : 'Assign')
+                                    .cancel('Chose another');
+                                return confirm;
+                        });
                     });
-                });
-            return hunk.name == undefined
-                ? 'Please, search person you want to assign this locker?'
-                : 'The locker ' + locker.lockerId + ' is assigned to' +
-                    '\nName: ' + hunk.name +
-                    '\nStarted: ' + visitZ.start;
-        }
+                //     .then(function (data) {
+                //         $scope.hunkForCurrentLocker = data;
+                //         console.log('4. ' + JSON.stringify(data));
+                // })
+            }
 
         $scope.finishVisit = function(locker) {
             var visit = {};
