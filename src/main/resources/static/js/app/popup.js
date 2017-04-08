@@ -1,104 +1,106 @@
 var app = angular.module('dialogDemo1', ['ngMaterial']);
 
 app.controller('AppCtrl', function($scope, $http, $mdDialog) {
-        $scope.status = '  ';
-        $scope.customFullscreen = false;
+    $scope.status = '  ';
+    $scope.customFullscreen = false;
 
-        $scope.showConfirm = function(ev, locker, reserved) {
-            $scope.hunkForCurrentLocker = getPopupContent(locker);
-
-            console.log('6. ' + JSON.stringify($scope.hunkForCurrentLocker));
-
-            $scope.confirm = $mdDialog.confirm()
-                .title(getTitle(locker, reserved) )
-                .textContent($scope.hunkForCurrentLocker)
-                .ariaLabel('Assignment')
-                .targetEvent(ev)
-                .ok(reserved ? 'Finish' : 'Assign')
-                .cancel('Chose another');
-
-            $mdDialog.show($scope.confirm).then(function() {
-                if (!reserved) $scope.addVisit(hunk, locker);
-                if (reserved) $scope.finishVisit(locker);
-            }, function() {
-                $scope.status = 'Chose another';
-            });
-        };
-
-        $scope.addVisit = function(hunk, locker) {
-            var newVisit = JSON.stringify({
-                "start": new Date(),
-                "locker": locker.lockerId,
-                "client": hunk.clientId
-            });
-            $http.post("http://localhost:8080/hunk/visit/", newVisit);
-        };
-        
-        function getTitle(locker, reserved) {
-            $http.get("http://localhost:8080/hunk/" + locker.lockerId + "/visit/active").then(
-                function (response) {
-                    $scope.visitZ = response.data;
+    $scope.showConfirm = function(ev, locker, reserved) {
+        $scope.ev = ev;
+        $scope.reserved = reserved;
+        $scope.lockerForPopup = locker;
+        if ($scope.reserved){
+            $http.get($scope.HOST + "/hunk/" + locker.lockerId + "/visit/active")
+                .then(function (response) {
+                    $scope.visitForCurrentLocker = response.data;
+                    console.log('1. ' + JSON.stringify($scope.visitForCurrentLocker));
                     return response.data;
-                }).then(function(visitZ){
-                    $http.get("http://localhost:8080/hunk/client/" + visitZ.client).then(function(response) {
-
-                    });
-            });
+                }).then(function(visit){
+                $http.get($scope.HOST + "/hunk/client/" + visit.client)
+                    .then(function(response) {
+                        var hunkForCurrentLocker = response.data;
+                        $scope.buildPopup(hunkForCurrentLocker, locker);
+                    })
+            })
+        } else {
+            $scope.buildPopup($scope.hunk, locker);
         }
-        function getPopupContent(locker) {
-                $http.get("http://localhost:8080/hunk/" + locker.lockerId + "/visit/active")
-                    .then(function (response) {
-                        $scope.visitForCurrentLocker = response.data;
-                        console.log('1. ' + JSON.stringify($scope.visitForCurrentLocker));
-                        return response.data;
-                    }).then(function(visit){
-                        $http.get("http://localhost:8080/hunk/client/" + visit.client)
-                            .then(function(response) {
-                                $scope.hunkForCurrentLocker = response.data;
-                                console.log('2. ' + JSON.stringify($scope.hunkForCurrentLocker));
-                                return response.data;
-                            })
-                            .then(function (data) {
-                                $scope.hunkForCurrentLocker = data;
-                                console.log('3. ' + JSON.stringify(data));
-                                return data;
-                        });
-                    });
-                //     .then(function (data) {
-                //         $scope.hunkForCurrentLocker = data;
-                //         console.log('4. ' + JSON.stringify(data));
-                // })
-            }
+    };
 
-        $scope.finishVisit = function(locker) {
-            var visit = {};
-            $http.get("http://localhost:8080/hunk/" + locker.lockerId + "/visit/active").then(
-                function (response) {
-                    visit = response.data;
-                    visit.finish = new Date();
-                    visit.locker = null;
-                    visit.client = null;
-                    return visit;
-            }).then(function(visit){
-                $http.put("http://localhost:8080/hunk/visit/" + visit.visitId, visit).
-                success(function(data, status) {
-                    console.log(":)");
-                });
+
+    $scope.buildPopup = function (hunkForCurrentLocker, locker) {
+        var assigneeExists = hunkForCurrentLocker.clientId != 0;
+        $scope.alert = $mdDialog.alert()
+            .clickOutsideToClose(true)
+            .title("Oops!")
+            .textContent("Please search the client you want to assign this locker for!")
+            .ariaLabel()
+            .targetEvent($scope.ev)
+            .ok('Chose another');
+
+        $scope.confirm = $mdDialog.confirm()
+            .title($scope.reserved ? 'Finish workout' : 'Start workout')
+            .textContent($scope.reserved
+                ? "Do you want to finish workout for " + hunkForCurrentLocker.name + "?"
+                : "Do you want to assign " + $scope.lockerForPopup.number
+                                                + " for " + hunkForCurrentLocker.name + "?"
+            )
+            .ariaLabel('Assignment')
+            .targetEvent($scope.ev)
+            .ok($scope.reserved ? 'Finish' : 'Assign')
+            .cancel('Chose another');
+
+        if (assigneeExists){
+            $mdDialog.show($scope.confirm).then(function() {
+                if (!$scope.reserved) $scope.addVisit(hunkForCurrentLocker, locker);
+                if ($scope.reserved) $scope.finishVisit(locker);
+            })
+        }else {
+            $mdDialog.show($scope.alert)
+        }
+
+    };
+
+    $scope.addVisit = function(hunk, locker) {
+        var newVisit = JSON.stringify({
+            "start": new Date(),
+            "locker": locker.lockerId,
+            "client": hunk.clientId
+        });
+        $http.post($scope.HOST + "/hunk/visit/", newVisit).
+        success(function(data, status) {
+            $scope.getLockers()
+        });
+    };
+
+    $scope.finishVisit = function(locker) {
+        var visit = {};
+        $http.get($scope.HOST + "/hunk/" + locker.lockerId + "/visit/active").then(
+            function (response) {
+                visit = response.data;
+                visit.finish = new Date();
+                visit.locker = null;
+                visit.client = null;
+                return visit;
+        }).then(function(visit){
+            $http.put($scope.HOST + "/hunk/visit/" + visit.visitId, visit).
+            success(function(data, status) {
+                $scope.getLockers()
             });
+        });
+    };
+
+    function DialogController($scope, $mdDialog) {
+        $scope.hide = function() {
+            $mdDialog.hide();
         };
 
-        function DialogController($scope, $mdDialog) {
-            $scope.hide = function() {
-                $mdDialog.hide();
-            };
+        $scope.cancel = function() {
+            $mdDialog.cancel();
+        };
 
-            $scope.cancel = function() {
-                $mdDialog.cancel();
-            };
+        $scope.answer = function(answer) {
+            $mdDialog.hide(answer);
+        };
+    }
 
-            $scope.answer = function(answer) {
-                $mdDialog.hide(answer);
-            };
-        }
-
-    });
+});

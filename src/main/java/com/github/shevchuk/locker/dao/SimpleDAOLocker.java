@@ -102,12 +102,12 @@ public class SimpleDAOLocker implements DAOLocker {
                         "  BETWEEN\n" +
                         "    v.start\n" +
                         "      AND\n" +
-                        "    v.start + INTERVAL '15 minutes'\n" +
+                        "    v.start + INTERVAL '2 minutes'\n" +
                         "or current_timestamp >=\n" +
                         "    v.start + (SELECT avg(finish - start)\n" +
                         "                 FROM visits\n" +
                         "                 WHERE visits.client_id = c.client_id\n" +
-                        "    ) - INTERVAL '15 minutes')\n" +
+                        "    ) - INTERVAL '2 minutes')\n" +
                         ";").addEntity(Locker.class);
         List<Locker> lockers = (List<Locker>)getInappropriateNeighborsLockers.list();
         transaction.commit();

@@ -1,10 +1,7 @@
 package com.github.shevchuk.clients.visit.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.shevchuk.clients.client.model.Client;
 import com.github.shevchuk.locker.model.Locker;
-import com.sun.deploy.util.SessionState;
-import org.joda.time.DateTime;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -21,8 +18,6 @@ public class Visit {
     private Date start;
     @Column(name = "finish")
     private Date finish;
-//    @Column(name = "locker_id")
-//    private int lockerId;
 
 
     @OneToOne

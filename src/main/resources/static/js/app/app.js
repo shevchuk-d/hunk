@@ -2,41 +2,38 @@ var app = angular.module('ngrepeatApp', ['dialogDemo1', 'progressCircularDemo1']
 
 
 app.controller('customersCtrl', function($scope, $http) {
+    $scope.HOST = "localhost:8080/";
+
 
     $scope.loader = false;
 
     $scope.getLockers = function(){
-        console.log($scope.loader);
+        console.log("0. " + $scope.loader);
         $scope.loader = true;
-        $http.get("http://localhost:8080/hunk/lockers/reserved")
+        $http.get($scope.HOST + "/hunk/lockers/reserved")
             .then(function(response) {
                 $scope.reservedLockers = response.data;
-                console.log($scope.loader);
+                console.log("1. " + $scope.loader);
                 return response.data;
-            }).then(function (data) {
-            $scope.reservedLockers = data;
-            $http.get("http://localhost:8080/hunk/lockers/reserved/neighbors").then(function(response) {
-                $scope.reservedLockersNeighbors = response.data;
-                console.log($scope.loader);
-                return response.data;
+                }).then(function (data) {
+                    $scope.reservedLockers = data;
+                    console.log("2. " + $scope.loader);
+                    $http.get($scope.HOST + "/hunk/lockers/reserved/neighbors")
+                        .then(function(response) {
+                            $scope.reservedLockersNeighbors = response.data;
+                            console.log("3. " + $scope.loader);
+                            $scope.loader = false;
+                            console.log("5. " + $scope.loader);
+                            return response.data;
+                        });
             });
-            }).then(function (data) {
-            $scope.loader = false;
-            console.log($scope.loader);
-        });
     };
 
     $scope.getLockers();
 
-    $http.get("http://localhost:8080/hunk/lockers/all").then(function(response) {
+    $http.get($scope.HOST + "/hunk/lockers/all").then(function(response) {
         $scope.lockers = response.data;
     });
-
-    // $http.get("http://localhost:8080/hunk/lockers/reserved").then(function(response) {
-    //     $scope.reservedLockers = response.data;
-    // });
-
-
 
     $scope.arrayContains = function (array, obj) {
         return angular.toJson(array).indexOf(angular.toJson(obj)) >= 0;
@@ -48,21 +45,17 @@ app.controller('customersCtrl', function($scope, $http) {
         "sex": ""
     };
 
-
-
     $scope.getHunk = function(id) {
-        $http.get("http://localhost:8080/hunk/client/" + id).then(function(response) {
+        $http.get($scope.HOST + "/hunk/client/" + id).then(function(response) {
             $scope.hunk = response.data;
         });
     };
 
     $scope.refreshLockers = function () {
-        $http.get("http://localhost:8080/hunk/lockers/reserved").then(function(response) {
+        $http.get($scope.HOST + "/hunk/lockers/reserved").then(function(response) {
             $scope.reservedLockers = response.data;
         });
     };
-
-
 
 });
 
